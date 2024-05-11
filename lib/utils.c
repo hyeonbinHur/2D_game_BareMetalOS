@@ -1,4 +1,5 @@
 #include "font.h"
+#include "../uart/uart1.h"
 
 /* Functions to display text on the screen */
 // NOTE: zoom = 0 will not display the character
@@ -52,7 +53,7 @@ unsigned int uart_isReadByteReady(){
 #else // UART1
 unsigned int uart_isReadByteReady()
 {
-    return (*AUX_MU_LSR & 0x01);
+    return (AUX_MU_LSR & 0x01);
 }
 #endif
 

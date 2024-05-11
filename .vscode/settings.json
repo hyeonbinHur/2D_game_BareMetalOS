@@ -1,7 +1,10 @@
 {
   "files.associations": {
     "mbox.h": "c",
-    "uart1.h": "c"
+    "uart1.h": "c",
+    "utils.h": "c",
+    "uart0.h": "c",
+    "framebf.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

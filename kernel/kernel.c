@@ -21,7 +21,9 @@ void main()
     // drawRectARGB32(200, 200, 400, 400, 0x000000CC, 1); // BLUE
     // drawRectARGB32(250, 250, 400, 400, 0x00FFFF00, 1); // YELLOW
     // drawPixelARGB32(300, 300, 0x00FF0000);             // RED
-    drawString(100, 400, "Hello world", 0x0000BB00, 1);
+
+    drawChar("A", 200, 400, 0x00AA0000, 3);
+    // drawString(200, 400, "Hello world", 0x0000BB00, 100);
     while (1)
     {
         // read each char

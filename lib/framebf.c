@@ -1,4 +1,4 @@
-#include "mbox.h"
+#include "../kernel/mbox.h"
 #include "../uart/uart0.h"
 // Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
