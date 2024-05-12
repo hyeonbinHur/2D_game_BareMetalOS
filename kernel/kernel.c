@@ -25,12 +25,20 @@ void main()
 
     // drawChar("A", 200, 400, 0x00AA0000, 3);
     startGame();
+    int shiftY = -350;
+    showBackground(shiftY);
 
     while (1)
     {
         // read each char
         char c = uart_getc();
         // send back
-        uart_sendc(c);
+        // uart_sendc(c);
+
+        if (c == 'w')
+        {
+            shiftY = shiftY + 5;
+            showBackground(shiftY);
+        }
     }
 }

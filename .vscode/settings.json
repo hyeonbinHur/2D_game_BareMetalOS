@@ -4,7 +4,8 @@
     "uart1.h": "c",
     "utils.h": "c",
     "uart0.h": "c",
-    "framebf.h": "c"
+    "framebf.h": "c",
+    "font.h": "c"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
