@@ -3,6 +3,7 @@
 #include "../uart/uart1.h"
 #include "../lib/framebf.h"
 #include "../lib/utils.h"
+#include "../lib/game.h"
 
 void main()
 {
@@ -23,7 +24,8 @@ void main()
     // drawPixelARGB32(300, 300, 0x00FF0000);             // RED
 
     // drawChar("A", 200, 400, 0x00AA0000, 3);
-    drawString(200, 400, "Hello world", 0x0000BB00, 1);
+    startGame();
+
     while (1)
     {
         // read each char

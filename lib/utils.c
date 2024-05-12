@@ -21,6 +21,7 @@ void drawChar(unsigned char ch, int x, int y, unsigned int attr, int zoom)
     }
 }
 
+// Top_Center,Top_Right,TopLeft,Center,Bottom_Center,Bottom_Right,Bottom_Left
 void drawString(int x, int y, char *str, unsigned int attr, int zoom)
 {
     while (*str)
@@ -90,6 +91,7 @@ void wait_msec(unsigned int msVal)
 
 void set_wait_timer(int set, unsigned int msVal)
 {
+
     static unsigned long expiredTime = 0; // declare static to keep value
     register unsigned long r, f, t;
 
@@ -111,4 +113,17 @@ void set_wait_timer(int set, unsigned int msVal)
             asm volatile("mrs %0, cntpct_el0" : "=r"(r));
         } while (r < expiredTime);
     }
+}
+
+int my_strncmp(const char *command, const char *compare, int index)
+{
+
+    for (int i = 0; i < index; i++)
+    {
+        if (command[i] != compare[i])
+        {
+            return 0;
+        }
+    }
+    return 1;
 }
