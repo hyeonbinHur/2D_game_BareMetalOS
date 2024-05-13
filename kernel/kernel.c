@@ -45,7 +45,7 @@ void main()
         {
             if (stage == 1)
             {
-                shiftY = shiftY + 20;
+                shiftY = shiftY + 50;
                 showBackground(shiftY);
                 loadBlock(0, 0);
                 loadBlock(75, 39 + 20);
@@ -60,13 +60,33 @@ void main()
             }
             else if (stage == 2)
             {
-                shiftY = shiftY + 20;
+                shiftY = shiftY + 50;
                 showBackground2(shiftY);
+                loadBlock2(0, 0);
+                loadBlock2(75, 39 + 20);
+                loadBlock2(150, 78 + 20);
+                loadBlock2(225, 117 + 40);
+                loadBlock2(300, 156 + 60);
+                loadBlock2(375, 195 + 80);
+                loadBlock2(450, 234 + 100);
+                loadBlock2(525, 273 + 120);
+                loadBlock2(600, 317 + 140);
+                loadBlock2(675, 351 + 170);
             }
             else if (stage == 3)
             {
-                shiftY = shiftY + 20;
+                shiftY = shiftY + 50;
                 showBackground3(shiftY);
+                loadBlock3(0, 0);
+                loadBlock3(75, 39 + 20);
+                loadBlock3(150, 78 + 20);
+                loadBlock3(225, 117 + 40);
+                loadBlock3(300, 156 + 60);
+                loadBlock3(375, 195 + 80);
+                loadBlock3(450, 234 + 100);
+                loadBlock3(525, 273 + 120);
+                loadBlock3(600, 317 + 140);
+                loadBlock3(675, 351 + 170);
             }
         }
     }
