@@ -26,6 +26,7 @@ void main()
     // drawChar("A", 200, 400, 0x00AA0000, 3);
     startGame();
     int shiftY = -350;
+    int stage = 1;
     showBackground(shiftY);
 
     while (1)
@@ -34,11 +35,29 @@ void main()
         char c = uart_getc();
         // send back
         // uart_sendc(c);
+        if (shiftY > 300)
+        {
+            shiftY = -350;
+            stage++;
+        }
 
         if (c == 'w')
         {
-            shiftY = shiftY + 5;
-            showBackground(shiftY);
+            if (stage == 1)
+            {
+                shiftY = shiftY + 20;
+                showBackground2(shiftY);
+            }
+            else if (stage == 2)
+            {
+                shiftY = shiftY + 20;
+                showBackground2(shiftY);
+            }
+            else if (stage == 3)
+            {
+                shiftY = shiftY + 20;
+                showBackground3(shiftY);
+            }
         }
     }
 }

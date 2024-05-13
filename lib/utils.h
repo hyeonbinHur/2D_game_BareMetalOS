@@ -5,3 +5,5 @@ void wait_msec(unsigned int msVal);
 void set_wait_timer(int set, unsigned int msVal);
 
 extern const unsigned long epd_bitmap_stage1[];
+extern const unsigned long epd_bitmap_stage2[];
+extern const unsigned long epd_bitmap_stage3[];
