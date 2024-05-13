@@ -91,3 +91,19 @@ void showBackground3(int shiftY)
         }
     }
 }
+
+void loadBlock(int start_x, int start_y)
+{
+    int img_w = 75;
+    int img_h = 39;
+
+    for (int y = start_y; y < start_y + img_h; y++)
+    {
+
+        for (int x = start_x; x < start_x + img_w; x++)
+        {
+            unsigned int attr = epd_bitmap_stage_1_block[(y - start_y) * img_w + (x - start_x)];
+            drawPixelARGB32(x, y, attr); // Y 오프셋을 적용하여 중앙에 이미지를 그림
+        }
+    }
+}

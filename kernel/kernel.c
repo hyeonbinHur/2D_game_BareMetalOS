@@ -25,9 +25,9 @@ void main()
 
     // drawChar("A", 200, 400, 0x00AA0000, 3);
     startGame();
+
     int shiftY = -350;
     int stage = 1;
-    showBackground(shiftY);
 
     while (1)
     {
@@ -46,7 +46,17 @@ void main()
             if (stage == 1)
             {
                 shiftY = shiftY + 20;
-                showBackground2(shiftY);
+                showBackground(shiftY);
+                loadBlock(0, 0);
+                loadBlock(75, 39 + 20);
+                loadBlock(150, 78 + 20);
+                loadBlock(225, 117 + 40);
+                loadBlock(300, 156 + 60);
+                loadBlock(375, 195 + 80);
+                loadBlock(450, 234 + 100);
+                loadBlock(525, 273 + 120);
+                loadBlock(600, 317 + 140);
+                loadBlock(675, 351 + 170);
             }
             else if (stage == 2)
             {
