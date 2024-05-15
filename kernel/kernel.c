@@ -46,47 +46,30 @@ void main()
             if (stage == 1)
             {
                 shiftY = shiftY + 50;
-                showBackground(shiftY);
-                loadBlock(0, 0);
-                loadBlock(75, 39 + 20);
-                loadBlock(150, 78 + 20);
-                loadBlock(225, 117 + 40);
-                loadBlock(300, 156 + 60);
-                loadBlock(375, 195 + 80);
-                loadBlock(450, 234 + 100);
-                loadBlock(525, 273 + 120);
-                loadBlock(600, 317 + 140);
-                loadBlock(675, 351 + 170);
+                showBackground(shiftY, stage);
+                loadBlock(10, 10, stage);
+                loadBlock(75 + 15, 58 + 10, stage);
+                loadBlock(150 + 15, 116 + 10, stage);
+                loadBlock(225 + 15, 174 + 10, stage);
+                loadBlock(300 + 15, 232 + 10, stage);
+                loadBlock(375 + 15, 290 + 10, stage);
+                loadBlock(450 + 15, 348 + 10, stage);
+                loadBlock(525 + 15, 406 + 10, stage);
+                loadBlock(600 + 15, 464 + 10, stage);
+                loadBlock(675 + 15, 522 + 10, stage);
+                loadBlock(750 + 15, 580 + 10, stage);
+                loadBlock(825 + 15, 638 + 10, stage);
+                loadBlock(900 + 15, 696 + 10, stage);
             }
             else if (stage == 2)
             {
                 shiftY = shiftY + 50;
-                showBackground2(shiftY);
-                loadBlock2(0, 0);
-                loadBlock2(75, 39 + 20);
-                loadBlock2(150, 78 + 20);
-                loadBlock2(225, 117 + 40);
-                loadBlock2(300, 156 + 60);
-                loadBlock2(375, 195 + 80);
-                loadBlock2(450, 234 + 100);
-                loadBlock2(525, 273 + 120);
-                loadBlock2(600, 317 + 140);
-                loadBlock2(675, 351 + 170);
+                showBackground(shiftY, stage);
             }
             else if (stage == 3)
             {
                 shiftY = shiftY + 50;
-                showBackground3(shiftY);
-                loadBlock3(0, 0);
-                loadBlock3(75, 39 + 20);
-                loadBlock3(150, 78 + 20);
-                loadBlock3(225, 117 + 40);
-                loadBlock3(300, 156 + 60);
-                loadBlock3(375, 195 + 80);
-                loadBlock3(450, 234 + 100);
-                loadBlock3(525, 273 + 120);
-                loadBlock3(600, 317 + 140);
-                loadBlock3(675, 351 + 170);
+                showBackground(shiftY, stage);
             }
         }
     }
