@@ -131,3 +131,18 @@ void uart_dec(int num)
 
 	uart_puts(str);
 }
+
+unsigned int seed = 0x12345678; // Choose any non-zero value
+
+int generateRandomBit() {
+    // LCG parameters
+    unsigned int a = 1103515245;
+    unsigned int c = 12345;
+    unsigned int m = (1u << 31); // 2^31
+
+    // Update seed using the LCG formula
+    seed = (a * seed + c) % m;
+
+    // Extract multiple bits for better randomness
+    return (seed >> 16) & 1; // Extract the 17th bit
+}
