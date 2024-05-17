@@ -4,7 +4,6 @@
 #include "../lib/framebf.h"
 #include "../lib/utils.h"
 #include "../lib/game.h"
-// #include "random.h"
 
 void main()
 {
@@ -41,10 +40,7 @@ void main()
             shiftY = -350;
             stage++;
         }
-        if (c == 'r'){
-            uart_dec(generateRandomBit());
-            uart_puts("\n");
-        }
+
         if (c == 'w')
         {
             if (stage == 1)
