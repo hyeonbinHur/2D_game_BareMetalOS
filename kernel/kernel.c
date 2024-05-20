@@ -46,6 +46,7 @@ void main()
             if (stage == 1)
             {
                 shiftY = shiftY + 50;
+
                 showBackground(shiftY, stage);
                 loadBlock(10, 10, stage);
                 loadBlock(75 + 15, 58 + 10, stage);
@@ -65,11 +66,12 @@ void main()
             {
                 shiftY = shiftY + 50;
                 showBackground(shiftY, stage);
+
             }
             else if (stage == 3)
             {
                 shiftY = shiftY + 50;
-                showBackground(shiftY, stage);
+
             }
         }
     }
