@@ -21,4 +21,3 @@ char uart_getc();
 void uart_puts(char *s);
 void uart_hex(unsigned int num);
 void uart_dec(int num);
-int generateRandomBit();
