@@ -70,7 +70,6 @@ void main()
             else if (stage == 3)
             {
                 shiftY = shiftY + 50;
-
                 showBackground(shiftY, stage);
             }
         }
