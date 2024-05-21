@@ -10,6 +10,11 @@
 
 unsigned int first_block = 399;
 unsigned int *block_array;
+unsigned int game_start = 0;
+unsigned int current_w_index = 399;
+unsigned int current_h_index = 708 - 120;
+unsigned int count = 0;
+unsigned int isDie = 0;
 
 void main()
 {
@@ -29,18 +34,11 @@ void main()
     // drawRectARGB32(250, 250, 400, 400, 0x00FFFF00, 1); // YELLOW
     // drawPixelARGB32(300, 300, 0x00FF0000);             // RED
 
-    // drawChar("A", 200, 400, 0x00AA0000, 3);
-    // startGame();
+    startGame();
+    block_array = create_block_array(first_block);
 
     int shiftY = -350;
     int stage = 1;
-
-    shiftY = shiftY + 50;
-
-    showBackground(shiftY, stage);
-    block_array = create_block_array(first_block);
-    create_block(block_array);
-    load_character(399, 708 - 60);
 
     while (1)
     {
@@ -53,25 +51,36 @@ void main()
             shiftY = -350;
             stage++;
         }
-
-        // random test
-        if (c == 'r')
+        if (c == '\n')
         {
-            int r = generateRandomBit();
-            uart_dec(r);
-            uart_puts("\n");
+            game_start = 1;
         }
 
-        if (c == 'w')
+        if (game_start == 1)
         {
             if (stage == 1)
             {
-                shiftY = shiftY + 50;
-
                 showBackground(shiftY, stage);
-                block_array = create_block_array(first_block);
                 create_block(block_array);
-                load_character(399, 708);
+
+                if (c == 'a')
+                {
+                    count += 1;
+                    current_w_index -= 75;
+                    current_h_index -= 57;
+                }
+
+                if (c == 'd')
+                {
+                    count += 1;
+                    current_w_index += 75;
+                    current_h_index -= 57;
+                }
+
+                load_character(current_w_index, current_h_index);
+
+                // shiftY = shiftY + 50;
+
                 // loadBlock(399, 768 - 60, 1);
 
                 // loadBlock(24, 0, stage);

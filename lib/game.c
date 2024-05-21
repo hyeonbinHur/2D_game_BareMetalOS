@@ -78,14 +78,14 @@ void loadBlock(int start_x, int start_y, int stage)
 
 void load_character(int start_w, int start_h)
 {
-    int character_w = 60;
-    int character_h = 60;
+    int character_w = 70;
+    int character_h = 120;
 
     for (int h = start_h; h < start_h + character_h; h++)
     {
         for (int w = start_w; w < start_w + character_w; w++)
         {
-            unsigned int attr = epd_bitmap_warrior2[(h - start_h) * character_w + (w - start_w)];
+            unsigned int attr = epd_bitmap_right_stand[(h - start_h) * character_w + (w - start_w)];
             if (attr != 0x00000000)
             {
                 drawPixelARGB32(w, h, attr);
