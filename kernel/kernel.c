@@ -8,7 +8,7 @@
 // int w_index = [ 24, 99, 174, 249, 324, 399, 474, 549, 624, 699, 774, 849, 924 ];
 // int h_index = [ 0, 57, 114, 171, 228, 285, 342, 399, 456, 513, 570, 627, 684 ];
 
-unsigned int first_block = 24;
+unsigned int first_block = 399;
 unsigned int *block_array;
 
 void main()
