@@ -78,14 +78,14 @@ void loadBlock(int start_x, int start_y, int stage)
 
 void load_character(int start_w, int start_h)
 {
-    int character_w = 60;
-    int character_h = 60;
+    int character_w = 70;
+    int character_h = 120;
 
     for (int h = start_h; h < start_h + character_h; h++)
     {
         for (int w = start_w; w < start_w + character_w; w++)
         {
-            unsigned int attr = epd_bitmap_warrior2[(h - start_h) * character_w + (w - start_w)];
+            unsigned int attr = epd_bitmap_right_stand[(h - start_h) * character_w + (w - start_w)];
             if (attr != 0x00000000)
             {
                 drawPixelARGB32(w, h, attr);
@@ -97,7 +97,7 @@ void load_character(int start_w, int start_h)
 unsigned int *create_block_array(unsigned int current_block)
 {
     static unsigned int block_array[13];
-    block_array[0] = 399;
+    block_array[0] = current_block;
     for (int i = 1; i < 13; i++)
     {
         int temp = block_array[i - 1];
@@ -134,4 +134,42 @@ void create_block(unsigned int *block_array)
         loadBlock(block_array[i], h, 1);
         h -= 57;
     }
+}
+
+void *show_timer(unsigned int curret_time)
+{
+    char str[3];
+    int i = 0;
+
+    if (curret_time < 10)
+    {
+        str[i++] = '0';
+    }
+
+    if (curret_time == 0)
+    {
+        str[i++] = '0';
+    }
+    else
+    {
+        int temp = curret_time;
+        int digit_count = 0;
+
+        while (temp > 0)
+        {
+            temp /= 10;
+            digit_count++;
+        }
+
+        for (int j = digit_count - 1; j >= 0; j--)
+        {
+            str[i + j] = (curret_time % 10) + '0';
+            curret_time /= 10;
+        }
+        i += digit_count;
+    }
+
+    str[i] = '\0';
+
+    drawString(330, 200, str, 0x00AA0000, 3);
 }

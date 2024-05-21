@@ -8,8 +8,18 @@
 // int w_index = [ 24, 99, 174, 249, 324, 399, 474, 549, 624, 699, 774, 849, 924 ];
 // int h_index = [ 0, 57, 114, 171, 228, 285, 342, 399, 456, 513, 570, 627, 684 ];
 
-unsigned int first_block = 399;
-unsigned int *block_array;
+unsigned int first_block = 399;           // first block in each stage
+unsigned int *block_array;                // the random block array
+unsigned int game_start = 0;              // if game is started, change to 1
+unsigned int current_w_index = 399;       // start w index
+unsigned int current_h_index = 708 - 120; // start h index
+unsigned int step = 0;                    // if it reach 12, background is changed
+unsigned int isDie = 0;                   // if user die, change to 1
+unsigned int ms_counter = 0;              // check the time
+unsigned int stage_1_timer = 40;
+unsigned int stage_2_timer = 35;
+unsigned int stage_3_timer = 30;
+unsigned int phase = 7;
 
 void main()
 {
@@ -29,77 +39,84 @@ void main()
     // drawRectARGB32(250, 250, 400, 400, 0x00FFFF00, 1); // YELLOW
     // drawPixelARGB32(300, 300, 0x00FF0000);             // RED
 
-    // drawChar("A", 200, 400, 0x00AA0000, 3);
-    // startGame();
+    startGame();
+    block_array = create_block_array(first_block);
 
     int shiftY = -350;
     int stage = 1;
 
-    shiftY = shiftY + 50;
-
-    showBackground(shiftY, stage);
-    block_array = create_block_array(first_block);
-    create_block(block_array);
-    load_character(399, 708 - 60);
-
     while (1)
     {
         // read each char
+        wait_msec(300);
         char c = uart_getc();
+        ms_counter++;
+        if (ms_counter == 3)
+        {
+            ms_counter = 0;
+            stage_1_timer -= 1;
+        }
+
         // send back
         // uart_sendc(c);
-        if (shiftY > 300)
+
+        if (c == '\n')
         {
-            shiftY = -350;
-            stage++;
+            game_start = 1;
         }
 
-        // random test
-        if (c == 'r')
-        {
-            int r = generateRandomBit();
-            uart_dec(r);
-            uart_puts("\n");
-        }
+        show_timer(stage_1_timer);
 
-        if (c == 'w')
+        if (game_start == 1)
         {
+
+            if (c == 'a')
+            {
+                step += 1;
+                current_w_index -= 75;
+                current_h_index -= 57;
+            }
+            if (c == 'd')
+            {
+                step += 1;
+                current_w_index += 75;
+                current_h_index -= 57;
+            }
+
+            if (step == 12)
+            {
+                step = 0;
+                shiftY += 100;
+                current_h_index = 708 - 120;
+                block_array = create_block_array(block_array[12]);
+            }
+
+            if (shiftY > 450)
+            {
+                shiftY = -350;
+                stage++;
+            }
+
             if (stage == 1)
             {
-                shiftY = shiftY + 50;
 
-                showBackground(shiftY, stage);
-                block_array = create_block_array(first_block);
-                create_block(block_array);
-                load_character(399, 708);
-                // loadBlock(399, 768 - 60, 1);
+                if (step == 0)
+                {
+                    showBackground(shiftY, stage);
+                    create_block(block_array);
+                }
 
-                // loadBlock(24, 0, stage);
-                // loadBlock(99, 57, stage);
-                // loadBlock(174, 114, stage);
-                // loadBlock(99, 171, stage);
-
-                // loadBlock(75 + 15, 58 + 10, stage);
-                // loadBlock(150 + 15, 116 + 10, stage);
-                // loadBlock(225 + 15, 174 + 10, stage);
-                // loadBlock(300 + 15, 232 + 10, stage);
-                // loadBlock(375 + 15, 290 + 10, stage);
-                // loadBlock(450 + 15, 348 + 10, stage);
-                // loadBlock(525 + 15, 406 + 10, stage);
-                // loadBlock(600 + 15, 464 + 10, stage);
-                // loadBlock(675 + 15, 522 + 10, stage);
-                // loadBlock(750 + 15, 580 + 10, stage);
-                // loadBlock(825 + 15, 638 + 10, stage);
-                // loadBlock(900 + 15, 696 + 10, stage);
+                load_character(current_w_index, current_h_index);
             }
+
             else if (stage == 2)
             {
-                shiftY = shiftY + 50;
+                // shiftY = shiftY + 50;
                 showBackground(shiftY, stage);
             }
             else if (stage == 3)
             {
-                shiftY = shiftY + 50;
+                // shiftY = shiftY + 50;
                 showBackground(shiftY, stage);
             }
         }
