@@ -97,7 +97,7 @@ void load_character(int start_w, int start_h)
 unsigned int *create_block_array(unsigned int current_block)
 {
     static unsigned int block_array[13];
-    block_array[0] = 399;
+    block_array[0] = current_block;
     for (int i = 1; i < 13; i++)
     {
         int temp = block_array[i - 1];

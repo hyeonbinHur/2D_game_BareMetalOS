@@ -46,7 +46,7 @@ void main()
         char c = uart_getc();
         // send back
         // uart_sendc(c);
-        if (shiftY > 300)
+        if (shiftY > 450)
         {
             shiftY = -350;
             stage++;
@@ -55,26 +55,36 @@ void main()
         {
             game_start = 1;
         }
+        if (c == 'a')
+        {
+            count += 1;
+            current_w_index -= 75;
+            current_h_index -= 57;
+        }
+        if (c == 'd')
+        {
+            count += 1;
+            current_w_index += 75;
+            current_h_index -= 57;
+        }
 
         if (game_start == 1)
         {
+            if (count == 12)
+            {
+                count = 0;
+                shiftY += 100;
+                current_h_index = 708 - 60 - 60;
+                block_array = create_block_array(block_array[12]);
+            }
+
             if (stage == 1)
             {
-                showBackground(shiftY, stage);
-                create_block(block_array);
 
-                if (c == 'a')
+                if (count == 0)
                 {
-                    count += 1;
-                    current_w_index -= 75;
-                    current_h_index -= 57;
-                }
-
-                if (c == 'd')
-                {
-                    count += 1;
-                    current_w_index += 75;
-                    current_h_index -= 57;
+                    showBackground(shiftY, stage);
+                    create_block(block_array);
                 }
 
                 load_character(current_w_index, current_h_index);
@@ -82,7 +92,6 @@ void main()
                 // shiftY = shiftY + 50;
 
                 // loadBlock(399, 768 - 60, 1);
-
                 // loadBlock(24, 0, stage);
                 // loadBlock(99, 57, stage);
                 // loadBlock(174, 114, stage);
