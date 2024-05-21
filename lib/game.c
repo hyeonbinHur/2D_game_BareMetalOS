@@ -135,3 +135,41 @@ void create_block(unsigned int *block_array)
         h -= 57;
     }
 }
+
+void *show_timer(unsigned int curret_time)
+{
+    char str[3];
+    int i = 0;
+
+    if (curret_time < 10)
+    {
+        str[i++] = '0';
+    }
+
+    if (curret_time == 0)
+    {
+        str[i++] = '0';
+    }
+    else
+    {
+        int temp = curret_time;
+        int digit_count = 0;
+
+        while (temp > 0)
+        {
+            temp /= 10;
+            digit_count++;
+        }
+
+        for (int j = digit_count - 1; j >= 0; j--)
+        {
+            str[i + j] = (curret_time % 10) + '0';
+            curret_time /= 10;
+        }
+        i += digit_count;
+    }
+
+    str[i] = '\0';
+
+    drawString(330, 200, str, 0x00AA0000, 3);
+}
