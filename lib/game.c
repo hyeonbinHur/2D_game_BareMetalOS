@@ -76,10 +76,28 @@ void loadBlock(int start_x, int start_y, int stage)
     }
 }
 
+void load_character(int start_w, int start_h)
+{
+    int character_w = 60;
+    int character_h = 60;
+
+    for (int h = start_h; h < start_h + character_h; h++)
+    {
+        for (int w = start_w; w < start_w + character_w; w++)
+        {
+            unsigned int attr = epd_bitmap_warrior2[(h - start_h) * character_w + (w - start_w)];
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(w, h, attr);
+            }
+        }
+    }
+}
+
 unsigned int *create_block_array(unsigned int current_block)
 {
     static unsigned int block_array[13];
-    block_array[0] = current_block;
+    block_array[0] = 399;
     for (int i = 1; i < 13; i++)
     {
         int temp = block_array[i - 1];
@@ -110,10 +128,10 @@ unsigned int *create_block_array(unsigned int current_block)
 
 void create_block(unsigned int *block_array)
 {
-    int h = 768;
+    int h = 708;
     for (int i = 0; i < 13; i++)
     {
         loadBlock(block_array[i], h, 1);
-        h -= 60;
+        h -= 57;
     }
 }
