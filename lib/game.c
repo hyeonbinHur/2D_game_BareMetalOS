@@ -108,3 +108,13 @@ unsigned int *create_block_array(unsigned int current_block)
     }
     return block_array;
 }
+
+void create_block(unsigned int *block_array)
+{
+    int h = 0;
+    for (int i = 0; i < 13; i++)
+    {
+        loadBlock(block_array[i], h, 1);
+        h += 57;
+    }
+}

@@ -9,7 +9,7 @@
 // int h_index = [ 0, 57, 114, 171, 228, 285, 342, 399, 456, 513, 570, 627, 684 ];
 
 unsigned int first_block = 24;
-unsigned int block_array[13];
+unsigned int *block_array;
 
 void main()
 {
