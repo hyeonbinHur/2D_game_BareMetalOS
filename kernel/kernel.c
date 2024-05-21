@@ -5,6 +5,9 @@
 #include "../lib/utils.h"
 #include "../lib/game.h"
 
+// int w_index = [ 24, 99, 174, 249, 324, 399, 474, 549, 624, 699, 774, 849, 924 ];
+// int h_index = [ 0, 57, 114, 171, 228, 285, 342, 399, 456, 513, 570, 627, 684 ];
+
 void main()
 {
     // set up serial console
@@ -40,7 +43,7 @@ void main()
             shiftY = -350;
             stage++;
         }
-        
+
         // random test
         if (c == 'r')
         {
@@ -56,19 +59,23 @@ void main()
                 shiftY = shiftY + 50;
 
                 showBackground(shiftY, stage);
-                loadBlock(10, 10, stage);
-                loadBlock(75 + 15, 58 + 10, stage);
-                loadBlock(150 + 15, 116 + 10, stage);
-                loadBlock(225 + 15, 174 + 10, stage);
-                loadBlock(300 + 15, 232 + 10, stage);
-                loadBlock(375 + 15, 290 + 10, stage);
-                loadBlock(450 + 15, 348 + 10, stage);
-                loadBlock(525 + 15, 406 + 10, stage);
-                loadBlock(600 + 15, 464 + 10, stage);
-                loadBlock(675 + 15, 522 + 10, stage);
-                loadBlock(750 + 15, 580 + 10, stage);
-                loadBlock(825 + 15, 638 + 10, stage);
-                loadBlock(900 + 15, 696 + 10, stage);
+                loadBlock(24, 0, stage);
+                loadBlock(99, 57, stage);
+                loadBlock(174, 114, stage);
+                loadBlock(99, 171, stage);
+
+                // loadBlock(75 + 15, 58 + 10, stage);
+                // loadBlock(150 + 15, 116 + 10, stage);
+                // loadBlock(225 + 15, 174 + 10, stage);
+                // loadBlock(300 + 15, 232 + 10, stage);
+                // loadBlock(375 + 15, 290 + 10, stage);
+                // loadBlock(450 + 15, 348 + 10, stage);
+                // loadBlock(525 + 15, 406 + 10, stage);
+                // loadBlock(600 + 15, 464 + 10, stage);
+                // loadBlock(675 + 15, 522 + 10, stage);
+                // loadBlock(750 + 15, 580 + 10, stage);
+                // loadBlock(825 + 15, 638 + 10, stage);
+                // loadBlock(900 + 15, 696 + 10, stage);
             }
             else if (stage == 2)
             {

@@ -35,19 +35,19 @@ kernel8.img: ./build/boot.o ./build/uart.o $(OFILES) $(LIB_OFILES)
 
 clean:
 #for macos
-	rm -f ./build/*.o ./build/kernel8.elf *.img
+#	 rm -f ./build/*.o ./build/kernel8.elf *.img
 #for windows
-#	del .\build\kernel8.elf .\build\*.o *.img
+	del .\build\kernel8.elf .\build\*.o *.img
 
 # Run emulation with QEMU
 run1: 
 # for MacOS
-	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial null -serial stdio
+#	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial null -serial stdio
 # for Windows
-#	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial null -serial stdio
+	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial null -serial stdio
 
 run0: 
 # for MacOS
-	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial stdio
+#	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial stdio
 # for Windows
-#	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial stdio
+	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial stdio
