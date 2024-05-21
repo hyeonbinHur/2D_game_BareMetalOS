@@ -30,10 +30,17 @@ void main()
     // drawPixelARGB32(300, 300, 0x00FF0000);             // RED
 
     // drawChar("A", 200, 400, 0x00AA0000, 3);
-    startGame();
+    // startGame();
 
     int shiftY = -350;
     int stage = 1;
+
+    shiftY = shiftY + 50;
+
+    showBackground(shiftY, stage);
+    block_array = create_block_array(first_block);
+    create_block(block_array);
+    load_character(399, 708 - 60);
 
     while (1)
     {
@@ -64,6 +71,8 @@ void main()
                 showBackground(shiftY, stage);
                 block_array = create_block_array(first_block);
                 create_block(block_array);
+                load_character(399, 708);
+                // loadBlock(399, 768 - 60, 1);
 
                 // loadBlock(24, 0, stage);
                 // loadBlock(99, 57, stage);

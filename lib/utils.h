@@ -10,3 +10,4 @@ extern const unsigned long epd_bitmap_stage3[];
 extern const unsigned long epd_bitmap_stage_1_block[];
 extern const unsigned long epd_bitmap_stage_2_block[];
 extern const unsigned long epd_bitmap_stage_3_block[];
+extern const unsigned long epd_bitmap_warrior2[];
