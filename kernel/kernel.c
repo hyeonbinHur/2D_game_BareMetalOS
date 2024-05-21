@@ -40,6 +40,14 @@ void main()
             shiftY = -350;
             stage++;
         }
+        
+        // random test
+        if (c == 'r')
+        {
+            int r = generateRandomBit();
+            uart_dec(r);
+            uart_puts("\n");
+        }
 
         if (c == 'w')
         {
