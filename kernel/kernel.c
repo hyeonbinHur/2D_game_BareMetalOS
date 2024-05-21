@@ -8,6 +8,9 @@
 // int w_index = [ 24, 99, 174, 249, 324, 399, 474, 549, 624, 699, 774, 849, 924 ];
 // int h_index = [ 0, 57, 114, 171, 228, 285, 342, 399, 456, 513, 570, 627, 684 ];
 
+unsigned int first_block = 24;
+unsigned int block_array[13];
+
 void main()
 {
     // set up serial console
@@ -59,10 +62,13 @@ void main()
                 shiftY = shiftY + 50;
 
                 showBackground(shiftY, stage);
-                loadBlock(24, 0, stage);
-                loadBlock(99, 57, stage);
-                loadBlock(174, 114, stage);
-                loadBlock(99, 171, stage);
+                block_array = create_block_array(first_block);
+                create_block(block_array);
+
+                // loadBlock(24, 0, stage);
+                // loadBlock(99, 57, stage);
+                // loadBlock(174, 114, stage);
+                // loadBlock(99, 171, stage);
 
                 // loadBlock(75 + 15, 58 + 10, stage);
                 // loadBlock(150 + 15, 116 + 10, stage);

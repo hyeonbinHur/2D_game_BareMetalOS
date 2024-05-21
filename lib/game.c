@@ -1,7 +1,7 @@
 #include "./utils.h"
 // #include "./font.h"
 #include "./framebf.h"
-
+#include "../uart/uart1.h"
 void startGame()
 {
     drawString(330, 200, "Infinity stair", 0x00AA0000, 3);
@@ -74,4 +74,37 @@ void loadBlock(int start_x, int start_y, int stage)
             drawPixelARGB32(x, y, attr); // Y 오프셋을 적용하여 중앙에 이미지를 그림
         }
     }
+}
+
+unsigned int *create_block_array(unsigned int current_block)
+{
+    static unsigned int block_array[13];
+    block_array[0] = current_block;
+    for (int i = 1; i < 13; i++)
+    {
+        int temp = block_array[i - 1];
+        if (temp == 24)
+        {
+
+            block_array[i] = 99;
+        }
+        else if (temp == 999)
+        {
+            block_array[i] = 924;
+        }
+        else
+        {
+            int n = generateRandomBit();
+            if (n == 1)
+            {
+                block_array[i] = temp + 75;
+            }
+            else if (n == 0)
+            {
+                block_array[i] = temp - 75;
+            }
+        }
+        uart_puts(block_array[i]);
+    }
+    return block_array;
 }
