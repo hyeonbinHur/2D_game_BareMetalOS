@@ -110,6 +110,23 @@ void load_character(int start_w, int start_h)
     }
 }
 
+void show_die_character_fn(int start_w, int start_h)
+{
+    int character_w = 110;
+    int character_h = 69;
+    for (int h = start_h; h < start_h + character_h; h++)
+    {
+        for (int w = start_w; w < start_w + character_w; w++)
+        {
+            unsigned int attr = epd_bitmap_right_die[(h - start_h) * character_w + (w - start_w)];
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(w, h, attr);
+            }
+        }
+    }
+}
+
 unsigned int *create_block_array(unsigned int current_block)
 {
     static unsigned int block_array[13];

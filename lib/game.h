@@ -6,3 +6,4 @@ void create_block(unsigned int *block_array);
 void load_character(int start_w, int start_h);
 void *show_timer(unsigned int curret_time);
 void show_game_over_fn();
+void show_die_character_fn(int start_w, int start_h);

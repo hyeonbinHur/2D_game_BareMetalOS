@@ -106,8 +106,10 @@ void main()
                         showBackground(shiftY, stage);
                         create_block(block_array);
                     }
-
-                    load_character(current_w_index, current_h_index);
+                    if (gmae_over_flag == 0)
+                    {
+                        load_character(current_w_index, current_h_index);
+                    }
                 }
 
                 else if (stage == 2)
@@ -124,6 +126,7 @@ void main()
 
             if (gmae_over_flag == 1) // game over
             {
+                show_die_character_fn(current_w_index - 50, current_h_index + 50);
                 wait_msec(500);
                 show_game_over_fn();
             }
