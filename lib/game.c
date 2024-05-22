@@ -8,6 +8,22 @@ void startGame()
     drawString(340, 400, "Press Enter to start", 0x0000BB00, 2);
 }
 
+void show_game_over_fn()
+{
+    int x = 1024;
+    int y = 768;
+
+    for (int i = 0; i < y; i++)
+    {
+        wait_msec(1);
+        for (int j = 0; j < x; j++)
+        {
+            drawPixelARGB32(j, i, 0x000000);
+        }
+    }
+    drawString(390, 200, "Game Over", 0x00AA0000, 3);
+}
+
 void showBackground(int shiftY, int stage)
 {
     int originalHeight = 948;                   // 상단 절반의 원래 높이
