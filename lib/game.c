@@ -205,4 +205,4 @@ void *show_timer(unsigned int curret_time)
     str[i] = '\0';
 
     drawString(20, 20, str, 0x00AA0000, 3);
-}
+} 
