@@ -15,9 +15,9 @@ unsigned int game_start = 0;    // if game is started, change to 1
 unsigned int current_w_index = 399;       // character's start w index
 unsigned int current_h_index = 708 - 120; // character's start h index
 
-unsigned int step = 0;       // if it reach 12, background is changed
-unsigned int die_flag = 0;   // if user die, change to 1
-unsigned int ms_counter = 0; // check the time
+unsigned int step = 0;           // if it reach 12, background is changed
+unsigned int gmae_over_flag = 0; // if user die, change to 1
+unsigned int ms_counter = 0;     // check the time
 
 unsigned int stage_1_timer = 10;
 unsigned int stage_2_timer = 35;
@@ -51,49 +51,48 @@ void main()
 
         else if (game_start == 1)
         {
-
             wait_msec(300);
             char c = uart_getc();
-            ms_counter++;
-            if (ms_counter == 3)
-            {
-                // check time about 1 second
-                ms_counter = 0;
-                stage_1_timer -= 1;
-            }
-            show_timer(stage_1_timer);
 
-            // move logic
-            if (c == 'a')
+            if (gmae_over_flag == 0)
             {
-                step += 1;
-                current_w_index -= 75;
-                current_h_index -= 57;
-            }
 
-            if (c == 'd')
-            {
-                step += 1;
-                current_w_index += 75;
-                current_h_index -= 57;
-            }
+                ms_counter++;
+                if (ms_counter == 3)
+                {
+                    // check time about 1 second
+                    ms_counter = 0;
+                    stage_1_timer -= 1;
+                }
+                show_timer(stage_1_timer);
+                // move logic
+                if (c == 'a')
+                {
+                    step += 1;
+                    current_w_index -= 75;
+                    current_h_index -= 57;
+                }
 
-            if (step == 12)
-            {
-                step = 0;
-                shiftY += 100;
-                current_h_index = 708 - 120;
-                block_array = create_block_array(block_array[12]);
-            }
+                if (c == 'd')
+                {
+                    step += 1;
+                    current_w_index += 75;
+                    current_h_index -= 57;
+                }
+                if (step == 12)
+                {
+                    step = 0;
+                    shiftY += 100;
+                    current_h_index = 708 - 120;
+                    block_array = create_block_array(block_array[12]);
+                }
 
-            // die logic
-            if (step != 0)
-            {
-                die_flag = is_die_check(current_w_index, block_array[step], stage_1_timer);
-            }
+                // die logic
+                if (step != 0)
+                {
+                    gmae_over_flag = is_die_check(current_w_index, block_array[step], stage_1_timer);
+                }
 
-            if (die_flag == 0) // not die
-            {
                 if (shiftY > 450)
                 {
                     shiftY = -350;
@@ -122,8 +121,10 @@ void main()
                     showBackground(shiftY, stage);
                 }
             }
-            else if (die_flag == 1) // die
+
+            if (gmae_over_flag == 1) // game over
             {
+                wait_msec(500);
                 show_game_over_fn();
             }
         }
