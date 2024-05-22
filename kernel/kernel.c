@@ -41,22 +41,68 @@ void main()
 
     while (1)
     {
-        if (game_start == 0)
+        if (game_start == 1)
         {
-            game_init_fn();
-            game_start = 1;
-            game_start_fn();
-            block_array = create_block_array(first_block);
-        }
 
-        else if (game_start == 1)
-        {
+            if (stage == 1)
+            {
+
+                if (step == 0)
+                {
+                    showBackground(shiftY, stage);
+                    create_block(block_array);
+                }
+                if (gmae_over_flag == 0)
+                {
+                    load_character(current_w_index, current_h_index, direction);
+                }
+            }
+
+            else if (stage == 2)
+            {
+                // shiftY = shiftY + 50;
+                showBackground(shiftY, stage);
+            }
+            else if (stage == 3)
+            {
+                // shiftY = shiftY + 50;
+                showBackground(shiftY, stage);
+            }
+
             wait_msec(300);
             char c = uart_getc();
 
+            if (c == 'a')
+            {
+                step += 1;
+                current_w_index -= 75;
+                current_h_index -= 57;
+                direction = 0;
+            }
+
+            if (c == 'd')
+            {
+                step += 1;
+                current_w_index += 75;
+                current_h_index -= 57;
+                direction = 1;
+            }
+            if (step == 12)
+            {
+                step = 0;
+                shiftY += 100;
+                current_h_index = 708 - 120;
+                block_array = create_block_array(block_array[12]);
+            }
+
+            // die logic
+            if (step != 0)
+            {
+                gmae_over_flag = is_die_check(current_w_index, block_array[step], stage_1_timer);
+            }
+
             if (gmae_over_flag == 0)
             {
-                uart_puts("Hello world 2 \n");
                 ms_counter++;
                 if (ms_counter == 3)
                 {
@@ -66,76 +112,24 @@ void main()
                 }
                 show_timer(stage_1_timer);
                 // move logic
-                if (c == 'a')
-                {
-                    step += 1;
-                    current_w_index -= 75;
-                    current_h_index -= 57;
-                    direction = 0;
-                }
-
-                if (c == 'd')
-                {
-                    step += 1;
-                    current_w_index += 75;
-                    current_h_index -= 57;
-                    direction = 1;
-                }
-                if (step == 12)
-                {
-                    step = 0;
-                    shiftY += 100;
-                    current_h_index = 708 - 120;
-                    block_array = create_block_array(block_array[12]);
-                }
-
-                // die logic
-                if (step != 0)
-                {
-                    gmae_over_flag = is_die_check(current_w_index, block_array[step], stage_1_timer);
-                }
 
                 if (shiftY > 450)
                 {
                     shiftY = -350;
                     stage++;
                 }
-                if (stage == 1)
-                {
-
-                    if (step == 0)
-                    {
-                        showBackground(shiftY, stage);
-                        create_block(block_array);
-                    }
-                    if (gmae_over_flag == 0)
-                    {
-                        load_character(current_w_index, current_h_index, direction);
-                    }
-                }
-
-                else if (stage == 2)
-                {
-                    // shiftY = shiftY + 50;
-                    showBackground(shiftY, stage);
-                }
-                else if (stage == 3)
-                {
-                    // shiftY = shiftY + 50;
-                    showBackground(shiftY, stage);
-                }
             }
 
             if (gmae_over_flag == 1) // game over
             {
-                current_h_index += 50;
+                current_h_index += 100;
                 if (direction == 1)
                 {
-                    current_w_index -= 50;
+                    current_w_index += 50;
                 }
                 else if (direction == 0)
                 {
-                    current_w_index += 50;
+                    current_w_index -= 50;
                 }
                 show_die_character_fn(current_w_index, current_h_index, direction);
                 wait_msec(500);
@@ -144,6 +138,13 @@ void main()
                 gmae_over_flag = 0;
                 game_start = 0;
             }
+        }
+        else if (game_start == 0)
+        {
+            game_init_fn();
+            game_start = 1;
+            game_start_fn();
+            block_array = create_block_array(first_block);
         }
     }
 }
@@ -189,7 +190,7 @@ void game_init_fn()
     step = 0;
     gmae_over_flag = 0;
     ms_counter = 0;
-    stage_1_timer = 10;
+    stage_1_timer = 1000;
     stage_2_timer = 35;
     stage_3_timer = 30;
     phase = 7;
