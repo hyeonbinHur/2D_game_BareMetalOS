@@ -24,6 +24,7 @@ unsigned int stage_2_timer;
 unsigned int stage_3_timer;
 unsigned int phase;
 
+unsigned int is_load_flag;
 int shiftY;
 int stage;
 int direction; // 1 is right, 0 is left
@@ -39,6 +40,8 @@ void main()
     // Initialize frame buffer
     framebf_init();
 
+    unsigned char c;
+
     while (1)
     {
         if (game_start == 1)
@@ -47,8 +50,9 @@ void main()
             if (stage == 1)
             {
 
-                if (step == 0)
+                if (step == 0 && is_load_flag == 0)
                 {
+                    is_load_flag = 1;
                     showBackground(shiftY, stage);
                     create_block(block_array);
                 }
@@ -69,8 +73,9 @@ void main()
                 showBackground(shiftY, stage);
             }
 
-            wait_msec(300);
-            char c = uart_getc();
+            // wait_msec(300);
+            set_wait_timer(1, 20);
+            c = getUart();
 
             if (c == 'a')
             {
@@ -95,6 +100,10 @@ void main()
                 block_array = create_block_array(block_array[12]);
             }
 
+            set_wait_timer(0, 0);
+            ms_counter++;
+            show_timer(stage_1_timer);
+
             // die logic
             if (step != 0)
             {
@@ -103,18 +112,17 @@ void main()
 
             if (gmae_over_flag == 0)
             {
-                ms_counter++;
-                if (ms_counter == 3)
+                if (ms_counter == 100)
                 {
                     // check time about 1 second
                     ms_counter = 0;
                     stage_1_timer -= 1;
                 }
-                show_timer(stage_1_timer);
                 // move logic
 
                 if (shiftY > 450)
                 {
+                    is_load_flag = 0;
                     shiftY = -350;
                     stage++;
                 }
@@ -132,7 +140,7 @@ void main()
                     current_w_index -= 50;
                 }
                 show_die_character_fn(current_w_index, current_h_index, direction);
-                wait_msec(500);
+                // wait_msec(500);
                 show_game_over_fn();
 
                 gmae_over_flag = 0;
@@ -190,14 +198,14 @@ void game_init_fn()
     step = 0;
     gmae_over_flag = 0;
     ms_counter = 0;
-    stage_1_timer = 1000;
+    stage_1_timer = 40;
     stage_2_timer = 35;
     stage_3_timer = 30;
     phase = 7;
     shiftY = -350;
     stage = 1;
     direction = 1;
-
+    is_load_flag = 0;
     int x = 1024;
     int y = 768;
 
