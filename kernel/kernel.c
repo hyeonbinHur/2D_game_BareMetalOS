@@ -8,36 +8,32 @@
 // int w_index = [ 24, 99, 174, 249, 324, 399, 474, 549, 624, 699, 774, 849, 924 ];
 // int h_index = [ 0, 57, 114, 171, 228, 285, 342, 399, 456, 513, 570, 627, 684 ];
 
-unsigned int first_block = 399;           // first block in each stage
-unsigned int *block_array;                // the random block array
-unsigned int game_start = 0;              // if game is started, change to 1
-unsigned int current_w_index = 399;       // start w index
-unsigned int current_h_index = 708 - 120; // start h index
-unsigned int step = 0;                    // if it reach 12, background is changed
-unsigned int isDie = 0;                   // if user die, change to 1
-unsigned int ms_counter = 0;              // check the time
-unsigned int stage_1_timer = 40;
+unsigned int first_block = 399; // first block in each stage
+unsigned int *block_array;      // the random block array
+unsigned int game_start = 0;    // if game is started, change to 1
+
+unsigned int current_w_index = 399;       // character's start w index
+unsigned int current_h_index = 708 - 120; // character's start h index
+
+unsigned int step = 0;           // if it reach 12, background is changed
+unsigned int gmae_over_flag = 0; // if user die, change to 1
+unsigned int ms_counter = 0;     // check the time
+
+unsigned int stage_1_timer = 10;
 unsigned int stage_2_timer = 35;
 unsigned int stage_3_timer = 30;
 unsigned int phase = 7;
+
+void game_start_fn();
+int is_die_check(int current_character, int current_block, int timer);
 
 void main()
 {
     // set up serial console
     uart_init();
-    // say hello
-    uart_puts("\n\nHello World!\n");
-    uart_puts("\n\nHello World!\n");
-    uart_puts("\n\nHello World!\n");
 
     // Initialize frame buffer
     framebf_init();
-    // // Draw something on the screen
-    // drawRectARGB32(100, 100, 400, 400, 0x00AA0000, 1); // RED
-    // drawRectARGB32(150, 150, 400, 400, 0x0000BB00, 1); // GREEN
-    // drawRectARGB32(200, 200, 400, 400, 0x000000CC, 1); // BLUE
-    // drawRectARGB32(250, 250, 400, 400, 0x00FFFF00, 1); // YELLOW
-    // drawPixelARGB32(300, 300, 0x00FF0000);             // RED
 
     startGame();
     block_array = create_block_array(first_block);
@@ -47,78 +43,126 @@ void main()
 
     while (1)
     {
-        // read each char
-        wait_msec(300);
-        char c = uart_getc();
-        ms_counter++;
-        if (ms_counter == 3)
-        {
-            ms_counter = 0;
-            stage_1_timer -= 1;
-        }
-
-        // send back
-        // uart_sendc(c);
-
-        if (c == '\n')
+        if (game_start == 0)
         {
             game_start = 1;
+            game_start_fn();
         }
 
-        show_timer(stage_1_timer);
-
-        if (game_start == 1)
+        else if (game_start == 1)
         {
+            wait_msec(300);
+            char c = uart_getc();
 
-            if (c == 'a')
-            {
-                step += 1;
-                current_w_index -= 75;
-                current_h_index -= 57;
-            }
-            if (c == 'd')
-            {
-                step += 1;
-                current_w_index += 75;
-                current_h_index -= 57;
-            }
-
-            if (step == 12)
-            {
-                step = 0;
-                shiftY += 100;
-                current_h_index = 708 - 120;
-                block_array = create_block_array(block_array[12]);
-            }
-
-            if (shiftY > 450)
-            {
-                shiftY = -350;
-                stage++;
-            }
-
-            if (stage == 1)
+            if (gmae_over_flag == 0)
             {
 
-                if (step == 0)
+                ms_counter++;
+                if (ms_counter == 3)
                 {
-                    showBackground(shiftY, stage);
-                    create_block(block_array);
+                    // check time about 1 second
+                    ms_counter = 0;
+                    stage_1_timer -= 1;
+                }
+                show_timer(stage_1_timer);
+                // move logic
+                if (c == 'a')
+                {
+                    step += 1;
+                    current_w_index -= 75;
+                    current_h_index -= 57;
                 }
 
-                load_character(current_w_index, current_h_index);
+                if (c == 'd')
+                {
+                    step += 1;
+                    current_w_index += 75;
+                    current_h_index -= 57;
+                }
+                if (step == 12)
+                {
+                    step = 0;
+                    shiftY += 100;
+                    current_h_index = 708 - 120;
+                    block_array = create_block_array(block_array[12]);
+                }
+
+                // die logic
+                if (step != 0)
+                {
+                    gmae_over_flag = is_die_check(current_w_index, block_array[step], stage_1_timer);
+                }
+
+                if (shiftY > 450)
+                {
+                    shiftY = -350;
+                    stage++;
+                }
+                if (stage == 1)
+                {
+
+                    if (step == 0)
+                    {
+                        showBackground(shiftY, stage);
+                        create_block(block_array);
+                    }
+                    if (gmae_over_flag == 0)
+                    {
+                        load_character(current_w_index, current_h_index);
+                    }
+                }
+
+                else if (stage == 2)
+                {
+                    // shiftY = shiftY + 50;
+                    showBackground(shiftY, stage);
+                }
+                else if (stage == 3)
+                {
+                    // shiftY = shiftY + 50;
+                    showBackground(shiftY, stage);
+                }
             }
 
-            else if (stage == 2)
+            if (gmae_over_flag == 1) // game over
             {
-                // shiftY = shiftY + 50;
-                showBackground(shiftY, stage);
+                show_die_character_fn(current_w_index - 50, current_h_index + 50);
+                wait_msec(500);
+                show_game_over_fn();
             }
-            else if (stage == 3)
-            {
-                // shiftY = shiftY + 50;
-                showBackground(shiftY, stage);
-            }
+        }
+    }
+}
+
+int is_die_check(int current_character, int current_block, int timer)
+{
+    if (timer == 0)
+    {
+        return 1;
+    }
+    else
+    {
+        if (current_block == current_character)
+        {
+            return 0;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+}
+
+void game_start_fn()
+{
+    startGame();
+
+    while (1)
+    {
+        char c = uart_getc();
+        if (c == '\n')
+        {
+            break;
         }
     }
 }

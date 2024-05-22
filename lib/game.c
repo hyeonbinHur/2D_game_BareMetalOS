@@ -8,6 +8,22 @@ void startGame()
     drawString(340, 400, "Press Enter to start", 0x0000BB00, 2);
 }
 
+void show_game_over_fn()
+{
+    int x = 1024;
+    int y = 768;
+
+    for (int i = 0; i < y; i++)
+    {
+        wait_msec(1);
+        for (int j = 0; j < x; j++)
+        {
+            drawPixelARGB32(j, i, 0x000000);
+        }
+    }
+    drawString(390, 200, "Game Over", 0x00AA0000, 3);
+}
+
 void showBackground(int shiftY, int stage)
 {
     int originalHeight = 948;                   // 상단 절반의 원래 높이
@@ -94,6 +110,23 @@ void load_character(int start_w, int start_h)
     }
 }
 
+void show_die_character_fn(int start_w, int start_h)
+{
+    int character_w = 110;
+    int character_h = 69;
+    for (int h = start_h; h < start_h + character_h; h++)
+    {
+        for (int w = start_w; w < start_w + character_w; w++)
+        {
+            unsigned int attr = epd_bitmap_right_die[(h - start_h) * character_w + (w - start_w)];
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(w, h, attr);
+            }
+        }
+    }
+}
+
 unsigned int *create_block_array(unsigned int current_block)
 {
     static unsigned int block_array[13];
@@ -172,4 +205,4 @@ void *show_timer(unsigned int curret_time)
     str[i] = '\0';
 
     drawString(20, 20, str, 0x00AA0000, 3);
-}
+} 
