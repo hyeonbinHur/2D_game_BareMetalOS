@@ -22,6 +22,16 @@ void show_game_over_fn()
         }
     }
     drawString(390, 200, "Game Over", 0x00AA0000, 3);
+    drawString(340, 400, "Press r to restart the game", 0x0000BB00, 2);
+
+    while (1)
+    {
+        unsigned char c = uart_getc();
+        if (c == 'r')
+        {
+            break;
+        }
+    }
 }
 
 void showBackground(int shiftY, int stage)

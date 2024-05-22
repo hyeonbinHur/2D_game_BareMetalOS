@@ -8,21 +8,25 @@
 // int w_index = [ 24, 99, 174, 249, 324, 399, 474, 549, 624, 699, 774, 849, 924 ];
 // int h_index = [ 0, 57, 114, 171, 228, 285, 342, 399, 456, 513, 570, 627, 684 ];
 
-unsigned int first_block = 399; // first block in each stage
-unsigned int *block_array;      // the random block array
-unsigned int game_start = 0;    // if game is started, change to 1
+unsigned int first_block;  // first block in each stage
+unsigned int *block_array; // the random block array
+unsigned int game_start;   // if game is started, change to 1
 
-unsigned int current_w_index = 399;       // character's start w index
-unsigned int current_h_index = 708 - 120; // character's start h index
+unsigned int current_w_index; // character's start w index
+unsigned int current_h_index; // character's start h index
 
-unsigned int step = 0;           // if it reach 12, background is changed
-unsigned int gmae_over_flag = 0; // if user die, change to 1
-unsigned int ms_counter = 0;     // check the time
+unsigned int step;           // if it reach 12, background is changed
+unsigned int gmae_over_flag; // if user die, change to 1
+unsigned int ms_counter;     // check the time
 
-unsigned int stage_1_timer = 10;
-unsigned int stage_2_timer = 35;
-unsigned int stage_3_timer = 30;
-unsigned int phase = 7;
+unsigned int stage_1_timer;
+unsigned int stage_2_timer;
+unsigned int stage_3_timer;
+unsigned int phase;
+
+int shiftY;
+int stage;
+int direction; // 1 is right, 0 is left
 
 void game_start_fn();
 int is_die_check(int current_character, int current_block, int timer);
@@ -35,19 +39,14 @@ void main()
     // Initialize frame buffer
     framebf_init();
 
-    startGame();
-    block_array = create_block_array(first_block);
-
-    int shiftY = -350;
-    int stage = 1;
-    int direction = 1; // 1 is right, 0 is left
-
     while (1)
     {
         if (game_start == 0)
         {
+            game_init_fn();
             game_start = 1;
             game_start_fn();
+            block_array = create_block_array(first_block);
         }
 
         else if (game_start == 1)
@@ -57,7 +56,7 @@ void main()
 
             if (gmae_over_flag == 0)
             {
-
+                uart_puts("Hello world 2 \n");
                 ms_counter++;
                 if (ms_counter == 3)
                 {
@@ -141,6 +140,9 @@ void main()
                 show_die_character_fn(current_w_index, current_h_index, direction);
                 wait_msec(500);
                 show_game_over_fn();
+
+                gmae_over_flag = 0;
+                game_start = 0;
             }
         }
     }
@@ -175,6 +177,34 @@ void game_start_fn()
         if (c == '\n')
         {
             break;
+        }
+    }
+}
+
+void game_init_fn()
+{
+    first_block = 399;
+    current_w_index = 399;
+    current_h_index = 588;
+    step = 0;
+    gmae_over_flag = 0;
+    ms_counter = 0;
+    stage_1_timer = 10;
+    stage_2_timer = 35;
+    stage_3_timer = 30;
+    phase = 7;
+    shiftY = -350;
+    stage = 1;
+    direction = 1;
+
+    int x = 1024;
+    int y = 768;
+
+    for (int i = 0; i < y; i++)
+    {
+        for (int j = 0; j < x; j++)
+        {
+            drawPixelARGB32(j, i, 0x000000);
         }
     }
 }
