@@ -40,6 +40,7 @@ void main()
 
     int shiftY = -350;
     int stage = 1;
+    int direction = 1; // 1 is right, 0 is left
 
     while (1)
     {
@@ -71,6 +72,7 @@ void main()
                     step += 1;
                     current_w_index -= 75;
                     current_h_index -= 57;
+                    direction = 0;
                 }
 
                 if (c == 'd')
@@ -78,6 +80,7 @@ void main()
                     step += 1;
                     current_w_index += 75;
                     current_h_index -= 57;
+                    direction = 1;
                 }
                 if (step == 12)
                 {
@@ -108,7 +111,7 @@ void main()
                     }
                     if (gmae_over_flag == 0)
                     {
-                        load_character(current_w_index, current_h_index);
+                        load_character(current_w_index, current_h_index, direction);
                     }
                 }
 
@@ -126,7 +129,16 @@ void main()
 
             if (gmae_over_flag == 1) // game over
             {
-                show_die_character_fn(current_w_index - 50, current_h_index + 50);
+                current_h_index += 50;
+                if (direction == 1)
+                {
+                    current_w_index -= 50;
+                }
+                else if (direction == 0)
+                {
+                    current_w_index += 50;
+                }
+                show_die_character_fn(current_w_index, current_h_index, direction);
                 wait_msec(500);
                 show_game_over_fn();
             }

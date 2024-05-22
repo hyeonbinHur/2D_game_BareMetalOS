@@ -92,7 +92,7 @@ void loadBlock(int start_x, int start_y, int stage)
     }
 }
 
-void load_character(int start_w, int start_h)
+void load_character(int start_w, int start_h, int direction)
 {
     int character_w = 70;
     int character_h = 120;
@@ -101,7 +101,15 @@ void load_character(int start_w, int start_h)
     {
         for (int w = start_w; w < start_w + character_w; w++)
         {
-            unsigned int attr = epd_bitmap_right_stand[(h - start_h) * character_w + (w - start_w)];
+            unsigned int attr;
+            if (direction == 1)
+            {
+                attr = epd_bitmap_right_stand[(h - start_h) * character_w + (w - start_w)];
+            }
+            else if (direction == 0)
+            {
+                attr = epd_bitmap_left_stand[(h - start_h) * character_w + (w - start_w)];
+            }
             if (attr != 0x00000000)
             {
                 drawPixelARGB32(w, h, attr);
@@ -110,7 +118,7 @@ void load_character(int start_w, int start_h)
     }
 }
 
-void show_die_character_fn(int start_w, int start_h)
+void show_die_character_fn(int start_w, int start_h, int direction)
 {
     int character_w = 110;
     int character_h = 69;
@@ -118,7 +126,15 @@ void show_die_character_fn(int start_w, int start_h)
     {
         for (int w = start_w; w < start_w + character_w; w++)
         {
-            unsigned int attr = epd_bitmap_right_die[(h - start_h) * character_w + (w - start_w)];
+            unsigned int attr;
+            if (direction == 1)
+            {
+                attr = epd_bitmap_right_die[(h - start_h) * character_w + (w - start_w)];
+            }
+            else if (direction == 0)
+            {
+                attr = epd_bitmap_left_die[(h - start_h) * character_w + (w - start_w)];
+            }
             if (attr != 0x00000000)
             {
                 drawPixelARGB32(w, h, attr);
@@ -205,4 +221,4 @@ void *show_timer(unsigned int curret_time)
     str[i] = '\0';
 
     drawString(20, 20, str, 0x00AA0000, 3);
-} 
+}
