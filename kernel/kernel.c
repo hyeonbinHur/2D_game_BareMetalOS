@@ -46,10 +46,8 @@ void main()
     {
         if (game_start == 1)
         {
-
             if (stage == 1)
             {
-
                 if (step == 0 && is_load_flag == 0)
                 {
                     is_load_flag = 1;
@@ -119,7 +117,6 @@ void main()
                     stage_1_timer -= 1;
                 }
                 // move logic
-
                 if (shiftY > 450)
                 {
                     is_load_flag = 0;
@@ -147,6 +144,7 @@ void main()
                 game_start = 0;
             }
         }
+
         else if (game_start == 0)
         {
             game_init_fn();

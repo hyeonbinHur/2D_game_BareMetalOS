@@ -2,6 +2,9 @@
 // #include "./font.h"
 #include "./framebf.h"
 #include "../uart/uart1.h"
+
+struct screenData screen[1024][768];
+
 void startGame()
 {
     drawString(330, 200, "Infinity stair", 0x00AA0000, 3);
@@ -69,6 +72,7 @@ void showBackground(int shiftY, int stage)
             {
                 attr = epd_bitmap_stage3[index];
             }
+            screen[x][y].prev_value = attr;
             drawPixelARGB32(x, y + yOffset, attr); // Y 오프셋을 적용하여 중앙에 이미지를 그림
         }
     }
@@ -106,7 +110,14 @@ void load_character(int start_w, int start_h, int direction)
 {
     int character_w = 70;
     int character_h = 120;
-
+    if (direction == 1)
+    {
+        re_load_background(start_w - 75, start_h + 57, character_w, character_h);
+    }
+    else if (direction == 0)
+    {
+        re_load_background(start_w + 75, start_h + 57, character_w, character_h);
+    }
     for (int h = start_h; h < start_h + character_h; h++)
     {
         for (int w = start_w; w < start_w + character_w; w++)
@@ -231,4 +242,17 @@ void *show_timer(unsigned int curret_time)
     str[i] = '\0';
 
     drawString(20, 20, str, 0x00AA0000, 3);
+}
+
+void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, int img_h)
+{
+
+    for (int w = start_w; w < start_w + img_w; w++)
+    {
+        for (int h = start_h; h < start_h + img_h; h++)
+        {
+            unsigned int attr = screen[w][h].prev_value;
+            drawPixelARGB32(w, h, attr);
+        }
+    }
 }
