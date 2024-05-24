@@ -123,7 +123,7 @@ void main()
                 }
             }
 
-            if (step == 12)
+            if (step == 12 && is_jump == 0)
             {
                 is_load_flag = 0;
                 step = 0;
