@@ -5,9 +5,6 @@
 #include "../lib/utils.h"
 #include "../lib/game.h"
 
-// int w_index = [ 24, 99, 174, 249, 324, 399, 474, 549, 624, 699, 774, 849, 924 ];
-// int h_index = [ 0, 57, 114, 171, 228, 285, 342, 399, 456, 513, 570, 627, 684 ];
-
 unsigned int first_block;  // first block in each stage
 unsigned int *block_array; // the random block array
 unsigned int game_start;   // if game is started, change to 1
@@ -30,6 +27,7 @@ int stage;
 int direction; // 1 is right, 0 is left
 
 void game_start_fn();
+void game_init_fn();
 int is_die_check(int current_character, int current_block, int timer);
 
 void main()
@@ -92,6 +90,7 @@ void main()
             }
             if (step == 12)
             {
+                is_load_flag = 0;
                 step = 0;
                 shiftY += 100;
                 current_h_index = 708 - 120;
@@ -117,10 +116,10 @@ void main()
                     stage_1_timer -= 1;
                 }
                 // move logic
-                if (shiftY > 450)
+                if (shiftY == 0)
                 {
                     is_load_flag = 0;
-                    shiftY = -350;
+                    shiftY = -700;
                     stage++;
                 }
             }
@@ -200,7 +199,7 @@ void game_init_fn()
     stage_2_timer = 35;
     stage_3_timer = 30;
     phase = 7;
-    shiftY = -350;
+    shiftY = -700;
     stage = 1;
     direction = 1;
     is_load_flag = 0;

@@ -12,4 +12,6 @@ struct screenData
 {
     unsigned int current_value;
     unsigned int prev_value;
-}
+};
+
+extern struct screenData screen[1024][768];

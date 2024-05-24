@@ -2,8 +2,18 @@
 // #include "./font.h"
 #include "./framebf.h"
 #include "../uart/uart1.h"
+#include "./game.h"
+
+const int screen_width = 1024;
+const int screen_height = 768;
 
 struct screenData screen[1024][768];
+
+const int background_og_height = 948;
+const int background_og_width = 177;
+const float background_scaleX = 1024.0 / background_og_width;
+const int background_scaled_width = screen_width;
+const int background_scaled_height = background_og_height * background_scaleX;
 
 void startGame()
 {
@@ -45,20 +55,16 @@ void showBackground(int shiftY, int stage)
     int scaledWidth = 1024;                     // 스케일된 가로 크기, 화면을 꽉 채움
     int scaledHeight = originalHeight * scaleX; // 스케일된 세로 크기
 
-    int yOffset = (768 - scaledHeight) / 2; // 세로 중앙 정렬을 위한 Y 오프셋
+    // int yOffset = (768 - scaledHeight) / 2; // 세로 중앙 정렬을 위한 Y 오프셋
     // int shiftY = -350;                      // 아래로 이동시킬 픽셀 수
-    for (int y = 0; y < scaledHeight; y++)
+    for (int y = 0; y < 768; y++)
     {
-        int srcY = y / scaleX - shiftY; // 원본 이미지에서의 Y 인덱스 조정
-        if (srcY < 0)
-            srcY = 0; // 넘어가지 않도록 경계 처리
-        if (srcY >= originalHeight)
-            srcY = originalHeight - 1; // 넘어가지 않도록 경계 처리
-
-        for (int x = 0; x < scaledWidth; x++)
+        for (int x = 0; x < 1024; x++)
         {
+            int srcY = y / scaleX - shiftY;
             int srcX = x / scaleX;                     // 원본 이미지에서의 X 인덱스
             int index = (srcY * originalWidth + srcX); // 원본 이미지의 RGB888 데이터 인덱스
+
             unsigned int attr;
             if (stage == 1)
             {
@@ -73,7 +79,7 @@ void showBackground(int shiftY, int stage)
                 attr = epd_bitmap_stage3[index];
             }
             screen[x][y].prev_value = attr;
-            drawPixelARGB32(x, y + yOffset, attr); // Y 오프셋을 적용하여 중앙에 이미지를 그림
+            drawPixelARGB32(x, y, attr); // Y 오프셋을 적용하여 중앙에 이미지를 그림
         }
     }
 }
@@ -101,6 +107,7 @@ void loadBlock(int start_x, int start_y, int stage)
             {
                 attr = epd_bitmap_stage_3_block[(y - start_y) * img_w + (x - start_x)];
             }
+            screen[x][y].prev_value = attr;
             drawPixelARGB32(x, y, attr); // Y 오프셋을 적용하여 중앙에 이미지를 그림
         }
     }
@@ -208,6 +215,7 @@ void create_block(unsigned int *block_array)
 
 void *show_timer(unsigned int curret_time)
 {
+
     char str[3];
     int i = 0;
 
@@ -241,6 +249,7 @@ void *show_timer(unsigned int curret_time)
 
     str[i] = '\0';
 
+    re_load_background(20, 20, 70, 40);
     drawString(20, 20, str, 0x00AA0000, 3);
 }
 
