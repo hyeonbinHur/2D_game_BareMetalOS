@@ -69,7 +69,7 @@ void main()
                 showBackground(shiftY, stage);
             }
 
-            wait_msec(300);
+            wait_msec(10);
             char c = uart_getc();
 
             if (c == 'a')

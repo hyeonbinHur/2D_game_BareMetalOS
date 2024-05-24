@@ -10,6 +10,7 @@ build/kernel8.elf
 build/mbox.o
 build/utils.o
 build/uart.o
+build/boot.o
 
 
 Makefile
