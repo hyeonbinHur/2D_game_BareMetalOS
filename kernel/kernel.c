@@ -51,6 +51,7 @@ void main()
                     is_load_flag = 1;
                     showBackground(shiftY, stage);
                     create_block(block_array);
+                    show_phase(phase);
                 }
                 if (gmae_over_flag == 0)
                 {
@@ -92,6 +93,7 @@ void main()
             {
                 is_load_flag = 0;
                 step = 0;
+                phase++;
                 shiftY += 100;
                 current_h_index = 708 - 120;
                 block_array = create_block_array(block_array[12]);
@@ -126,19 +128,9 @@ void main()
 
             if (gmae_over_flag == 1) // game over
             {
-                current_h_index += 100;
-                if (direction == 1)
-                {
-                    current_w_index += 50;
-                }
-                else if (direction == 0)
-                {
-                    current_w_index -= 50;
-                }
                 show_die_character_fn(current_w_index, current_h_index, direction);
-                // wait_msec(500);
+                wait_msec(600);
                 show_game_over_fn();
-
                 gmae_over_flag = 0;
                 game_start = 0;
             }
@@ -158,7 +150,7 @@ int is_die_check(int current_character, int current_block, int timer)
 {
     if (timer == 0)
     {
-        return 1;
+        return 1; // 1
     }
     else
     {
@@ -168,7 +160,7 @@ int is_die_check(int current_character, int current_block, int timer)
         }
         else
         {
-            return 1;
+            return 1; // 1
         }
     }
 }
@@ -198,7 +190,7 @@ void game_init_fn()
     stage_1_timer = 40;
     stage_2_timer = 35;
     stage_3_timer = 30;
-    phase = 7;
+    phase = 1;
     shiftY = -700;
     stage = 1;
     direction = 1;

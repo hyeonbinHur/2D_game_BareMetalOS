@@ -150,6 +150,17 @@ void show_die_character_fn(int start_w, int start_h, int direction)
 {
     int character_w = 110;
     int character_h = 69;
+    if (direction == 1)
+    {
+        re_load_background(start_w - 75, start_h + 57, 70, 120);
+        start_w += 50;
+    }
+    else if (direction == 0)
+    {
+        re_load_background(start_w + 75, start_h + 57, 70, 120);
+        start_w -= 50;
+    }
+    start_h += 100;
     for (int h = start_h; h < start_h + character_h; h++)
     {
         for (int w = start_w; w < start_w + character_w; w++)
@@ -251,6 +262,23 @@ void *show_timer(unsigned int curret_time)
 
     re_load_background(20, 20, 70, 40);
     drawString(20, 20, str, 0x00AA0000, 3);
+}
+
+void show_phase(int phase)
+{
+    // drawString(330, 200, "Infinity stair", 0x00AA0000, 3);
+    char currnet_phase = phase + '0';
+    char str[3];
+    str[0] = currnet_phase;
+    str[1] = '/';
+    str[2] = '7';
+    uart_puts(str[0]);
+    uart_puts("\n");
+    uart_puts(str[1]);
+    uart_puts("\n");
+    uart_puts(str[2]);
+    uart_puts("\n");
+    drawString(900, 20, str, 0x00AA0000, 3);
 }
 
 void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, int img_h)
