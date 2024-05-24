@@ -119,11 +119,11 @@ void load_character(int start_w, int start_h, int direction)
     int character_h = 120;
     if (direction == 1)
     {
-        re_load_background(start_w - 75, start_h + 57, character_w, character_h);
+        re_load_background(start_w - 38, start_h + 17, character_w, 130);
     }
     else if (direction == 0)
     {
-        re_load_background(start_w + 75, start_h + 57, character_w, character_h);
+        re_load_background(start_w + 38, start_h + 17, character_w, 130);
     }
     for (int h = start_h; h < start_h + character_h; h++)
     {
@@ -279,6 +279,41 @@ void show_phase(int phase)
     uart_puts(str[2]);
     uart_puts("\n");
     drawString(900, 20, str, 0x00AA0000, 3);
+}
+
+void show_jump(int start_w, int start_h, int direction)
+{
+    int character_w = 70;
+    int character_h = 130;
+    uart_puts("Hello jump \n");
+    if (direction == 1)
+    {
+        re_load_background(start_w - 37, start_h + 40, character_w, 120);
+    }
+    else if (direction == 0)
+    {
+        re_load_background(start_w + 37, start_h + 40, character_w, 120);
+    }
+
+    for (int h = start_h; h < start_h + character_h; h++)
+    {
+        for (int w = start_w; w < start_w + character_w; w++)
+        {
+            unsigned int attr;
+            if (direction == 1)
+            {
+                attr = epd_bitmap_right_jump[(h - start_h) * character_w + (w - start_w)];
+            }
+            else if (direction == 0)
+            {
+                attr = epd_bitmap_left_jump[(h - start_h) * character_w + (w - start_w)];
+            }
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(w, h, attr);
+            }
+        }
+    }
 }
 
 void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, int img_h)

@@ -15,6 +15,7 @@ unsigned int current_h_index; // character's start h index
 unsigned int step;           // if it reach 12, background is changed
 unsigned int gmae_over_flag; // if user die, change to 1
 unsigned int ms_counter;     // check the time
+unsigned int is_jump;        // is the character jumping? 0 = no jumping, 1 = is jumping
 
 unsigned int stage_1_timer;
 unsigned int stage_2_timer;
@@ -53,42 +54,75 @@ void main()
                     create_block(block_array);
                     show_phase(phase);
                 }
-                if (gmae_over_flag == 0)
+                if (is_jump == 1)
                 {
-                    load_character(current_w_index, current_h_index, direction);
+                    show_jump(current_w_index, current_h_index, direction);
+                    wait_msec(100);
+                }
+                else
+                {
+                    if (gmae_over_flag == 0)
+                    {
+                        load_character(current_w_index, current_h_index, direction);
+                    }
                 }
             }
 
-            else if (stage == 2)
-            {
-                // shiftY = shiftY + 50;
-                showBackground(shiftY, stage);
-            }
-            else if (stage == 3)
-            {
-                // shiftY = shiftY + 50;
-                showBackground(shiftY, stage);
-            }
+            // else if (stage == 2)
+            // {
+            //     // shiftY = shiftY + 50;
+            //     showBackground(shiftY, stage);
+            // }
+            // else if (stage == 3)
+            // {
+            //     // shiftY = shiftY + 50;
+            //     showBackground(shiftY, stage);
+            // }
 
             // wait_msec(300);
             set_wait_timer(1, 20);
             c = getUart();
 
-            if (c == 'a')
+            if (is_jump == 1)
             {
-                step += 1;
-                current_w_index -= 75;
-                current_h_index -= 57;
-                direction = 0;
+                is_jump = 0;
+                if (direction == 1)
+                {
+                    current_w_index += 38;
+                    current_h_index -= 17;
+                }
+                else if (direction == 0)
+                {
+                    current_w_index -= 38;
+                    current_h_index -= 17;
+                }
             }
 
-            if (c == 'd')
+            else if (is_jump == 0)
             {
-                step += 1;
-                current_w_index += 75;
-                current_h_index -= 57;
-                direction = 1;
+                if (c == 'a')
+                {
+                    step += 1;
+                    // current_w_index -= 75;
+                    // current_h_index -= 57;
+                    current_w_index -= 37;
+                    current_h_index -= 40;
+                    direction = 0;
+                    is_jump = 1;
+                }
+
+                if (c == 'd')
+                {
+                    step += 1;
+                    // current_w_index += 75;
+                    // current_h_index -= 57;
+                    current_w_index += 37;
+                    current_h_index -= 40;
+                    direction = 1;
+                    is_jump = 1;
+                }
             }
+
             if (step == 12)
             {
                 is_load_flag = 0;
@@ -104,9 +138,16 @@ void main()
             show_timer(stage_1_timer);
 
             // die logic
-            if (step != 0)
+            if (step != 0 && is_jump == 1)
             {
-                gmae_over_flag = is_die_check(current_w_index, block_array[step], stage_1_timer);
+                if (direction == 0)
+                {
+                    gmae_over_flag = is_die_check(current_w_index - 38, block_array[step], stage_1_timer);
+                }
+                else if (direction == 1)
+                {
+                    gmae_over_flag = is_die_check(current_w_index + 38, block_array[step], stage_1_timer);
+                }
             }
 
             if (gmae_over_flag == 0)
@@ -114,6 +155,7 @@ void main()
                 if (ms_counter == 100)
                 {
                     // check time about 1 second
+
                     ms_counter = 0;
                     stage_1_timer -= 1;
                 }
@@ -195,6 +237,7 @@ void game_init_fn()
     stage = 1;
     direction = 1;
     is_load_flag = 0;
+    is_jump = 0;
     int x = 1024;
     int y = 768;
 
