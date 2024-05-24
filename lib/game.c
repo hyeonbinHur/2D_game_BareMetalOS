@@ -8,6 +8,32 @@ void startGame()
     drawString(340, 400, "Press Enter to start", 0x0000BB00, 2);
 }
 
+void show_game_over_fn()
+{
+    int x = 1024;
+    int y = 768;
+
+    for (int i = 0; i < y; i++)
+    {
+        wait_msec(1);
+        for (int j = 0; j < x; j++)
+        {
+            drawPixelARGB32(j, i, 0x000000);
+        }
+    }
+    drawString(390, 200, "Game Over", 0x00AA0000, 3);
+    drawString(340, 400, "Press r to restart the game", 0x0000BB00, 2);
+
+    while (1)
+    {
+        unsigned char c = uart_getc();
+        if (c == 'r')
+        {
+            break;
+        }
+    }
+}
+
 void showBackground(int shiftY, int stage)
 {
     int originalHeight = 948;                   // 상단 절반의 원래 높이
@@ -76,7 +102,7 @@ void loadBlock(int start_x, int start_y, int stage)
     }
 }
 
-void load_character(int start_w, int start_h)
+void load_character(int start_w, int start_h, int direction)
 {
     int character_w = 70;
     int character_h = 120;
@@ -85,7 +111,40 @@ void load_character(int start_w, int start_h)
     {
         for (int w = start_w; w < start_w + character_w; w++)
         {
-            unsigned int attr = epd_bitmap_right_stand[(h - start_h) * character_w + (w - start_w)];
+            unsigned int attr;
+            if (direction == 1)
+            {
+                attr = epd_bitmap_right_stand[(h - start_h) * character_w + (w - start_w)];
+            }
+            else if (direction == 0)
+            {
+                attr = epd_bitmap_left_stand[(h - start_h) * character_w + (w - start_w)];
+            }
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(w, h, attr);
+            }
+        }
+    }
+}
+
+void show_die_character_fn(int start_w, int start_h, int direction)
+{
+    int character_w = 110;
+    int character_h = 69;
+    for (int h = start_h; h < start_h + character_h; h++)
+    {
+        for (int w = start_w; w < start_w + character_w; w++)
+        {
+            unsigned int attr;
+            if (direction == 1)
+            {
+                attr = epd_bitmap_right_die[(h - start_h) * character_w + (w - start_w)];
+            }
+            else if (direction == 0)
+            {
+                attr = epd_bitmap_left_die[(h - start_h) * character_w + (w - start_w)];
+            }
             if (attr != 0x00000000)
             {
                 drawPixelARGB32(w, h, attr);
