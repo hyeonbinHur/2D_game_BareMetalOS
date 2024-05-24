@@ -1,0 +1,12 @@
+
+
+
+kernel8.img
+build/font.o
+build/framebf.o
+build/game.o
+build/kernel.o
+build/kernel8.elf
+build/mbox.o
+build/utils.o
+build/uart.o
