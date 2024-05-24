@@ -285,7 +285,10 @@ void show_jump(int start_w, int start_h, int direction)
 {
     int character_w = 70;
     int character_h = 130;
-    uart_puts("Hello jump \n");
+    if (start_h <= 0)
+    {
+        uart_puts("under 0 \n");
+    }
     if (direction == 1)
     {
         re_load_background(start_w - 37, start_h + 40, character_w, 120);
@@ -318,13 +321,32 @@ void show_jump(int start_w, int start_h, int direction)
 
 void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, int img_h)
 {
-
+    if (start_w < 0)
+    {
+        start_w = 1;
+    }
+    if (start_h > 768)
+    {
+        start_h = 767;
+    }
+    if (start_h < 0)
+    {
+        uart_puts("Hello 0 \n");
+        start_h = 0;
+    }
     for (int w = start_w; w < start_w + img_w; w++)
     {
         for (int h = start_h; h < start_h + img_h; h++)
         {
-            unsigned int attr = screen[w][h].prev_value;
-            drawPixelARGB32(w, h, attr);
+            if (h > 0 && w > 0)
+            {
+                unsigned int attr = screen[w][h].prev_value;
+                drawPixelARGB32(w, h, attr);
+            }
+            else
+            {
+                uart_puts("under 0\n");
+            }
         }
     }
 }
