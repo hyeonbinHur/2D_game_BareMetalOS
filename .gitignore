@@ -11,6 +11,7 @@ build/mbox.o
 build/utils.o
 build/uart.o
 build/boot.o
+build/multicore.o
 
 
 Makefile
