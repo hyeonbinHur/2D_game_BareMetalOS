@@ -108,7 +108,7 @@ void loadBlock(int start_x, int start_y, int stage)
                 attr = epd_bitmap_stage_3_block[(y - start_y) * img_w + (x - start_x)];
             }
             screen[x][y].prev_value = attr;
-            drawPixelARGB32(x, y, attr); // Y 오프셋을 적용하여 중앙에 이미지를 그림
+            drawPixelARGB32(x, y, attr);
         }
     }
 }
@@ -116,7 +116,6 @@ void loadBlock(int start_x, int start_y, int stage)
 void load_character(int start_w, int start_h, int direction)
 {
     // uart_sendi(start_h);
-
     int character_w = 70;
     int character_h = 120;
     // if (direction == 1)
@@ -150,7 +149,6 @@ void load_character(int start_w, int start_h, int direction)
 
 void show_die_character_fn(int start_w, int start_h, int direction)
 {
-
     int character_w = 110;
     int character_h = 69;
     if (direction == 1)
@@ -192,14 +190,14 @@ unsigned int *create_block_array(unsigned int current_block)
     for (int i = 1; i < 13; i++)
     {
         int temp = block_array[i - 1];
-        if (temp == 24)
-        {
 
-            block_array[i] = 99;
-        }
-        else if (temp == 999)
+        if (temp - 75 < 100)
         {
-            block_array[i] = 924;
+            block_array[i] = temp + 75;
+        }
+        else if (temp + 75 > 900)
+        {
+            block_array[i] = temp - 75;
         }
         else
         {
@@ -217,12 +215,12 @@ unsigned int *create_block_array(unsigned int current_block)
     return block_array;
 }
 
-void create_block(unsigned int *block_array)
+void create_block(unsigned int *block_array, int stage)
 {
     int h = 708;
     for (int i = 0; i < 13; i++)
     {
-        loadBlock(block_array[i], h, 1);
+        loadBlock(block_array[i], h, stage);
         h -= 57;
     }
 }
@@ -328,4 +326,48 @@ void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, i
             drawPixelARGB32(w, h, attr);
         }
     }
+}
+
+void show_stage_clear(int stage)
+{
+
+    int x = 1024;
+    int y = 768;
+
+    for (int i = 0; i < y; i++)
+    {
+        for (int j = 0; j < x; j++)
+        {
+            drawPixelARGB32(j, i, 0x000000);
+        }
+    }
+
+    if (stage == 1)
+    {
+
+        drawString(360, 200, "Stage 1 Jungle", 0x00FF00, 3);
+        drawString(290, 400, "Press \"Enter\" to start the game", 0x0000BB00, 2);
+    }
+    else if (stage == 2)
+    {
+        drawString(320, 200, "Stage 2 Antarctica", 0x0000FF, 3);
+        drawString(280, 400, "Press \"Enter\" to start the game", 0x0000FF, 2);
+    }
+    else if (stage == 3)
+    {
+        drawString(290, 200, "Fianl Stage Volcano", 0xFF0000, 3);
+        drawString(250, 400, "Press \"Enter\" to restart the game", 0xFF0000, 2);
+    }
+    unsigned char c;
+
+    while (1)
+    {
+        c = uart_getc();
+        if (c == '\n')
+        {
+            break;
+        }
+    }
+
+    uart_puts("escape show stage \n");
 }
