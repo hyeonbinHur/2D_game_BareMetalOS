@@ -115,16 +115,18 @@ void loadBlock(int start_x, int start_y, int stage)
 
 void load_character(int start_w, int start_h, int direction)
 {
+    // uart_sendi(start_h);
+
     int character_w = 70;
     int character_h = 120;
-    if (direction == 1)
-    {
-        re_load_background(start_w - 38, start_h + 17, character_w, 130);
-    }
-    else if (direction == 0)
-    {
-        re_load_background(start_w + 38, start_h + 17, character_w, 130);
-    }
+    // if (direction == 1)
+    // {
+    //     re_load_background(start_w - 38, start_h + 17, character_w, 130);
+    // }
+    // else if (direction == 0)
+    // {
+    //     re_load_background(start_w + 38, start_h + 17, character_w, 130);
+    // }
     for (int h = start_h; h < start_h + character_h; h++)
     {
         for (int w = start_w; w < start_w + character_w; w++)
@@ -148,16 +150,17 @@ void load_character(int start_w, int start_h, int direction)
 
 void show_die_character_fn(int start_w, int start_h, int direction)
 {
+
     int character_w = 110;
     int character_h = 69;
     if (direction == 1)
     {
-        re_load_background(start_w - 75, start_h + 57, 70, 120);
+        re_load_background(start_w - 75, start_h + 57, 70, 130);
         start_w += 50;
     }
     else if (direction == 0)
     {
-        re_load_background(start_w + 75, start_h + 57, 70, 120);
+        re_load_background(start_w + 75, start_h + 57, 70, 130);
         start_w -= 50;
     }
     start_h += 100;
@@ -285,18 +288,6 @@ void show_jump(int start_w, int start_h, int direction)
 {
     int character_w = 70;
     int character_h = 130;
-    if (start_h <= 0)
-    {
-        uart_puts("under 0 \n");
-    }
-    if (direction == 1)
-    {
-        re_load_background(start_w - 37, start_h + 40, character_w, 120);
-    }
-    else if (direction == 0)
-    {
-        re_load_background(start_w + 37, start_h + 40, character_w, 120);
-    }
 
     for (int h = start_h; h < start_h + character_h; h++)
     {
@@ -321,32 +312,20 @@ void show_jump(int start_w, int start_h, int direction)
 
 void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, int img_h)
 {
-    if (start_w < 0)
+    if (img_h == 130 || img_h == 120)
     {
-        start_w = 1;
+        uart_sendi(start_h);
     }
-    if (start_h > 768)
+    if (start_h == -22 || start_h == -79 || start_h == -39)
     {
-        start_h = 767;
-    }
-    if (start_h < 0)
-    {
-        uart_puts("Hello 0 \n");
         start_h = 0;
     }
     for (int w = start_w; w < start_w + img_w; w++)
     {
         for (int h = start_h; h < start_h + img_h; h++)
         {
-            if (h > 0 && w > 0)
-            {
-                unsigned int attr = screen[w][h].prev_value;
-                drawPixelARGB32(w, h, attr);
-            }
-            else
-            {
-                uart_puts("under 0\n");
-            }
+            unsigned int attr = screen[w][h].prev_value;
+            drawPixelARGB32(w, h, attr);
         }
     }
 }

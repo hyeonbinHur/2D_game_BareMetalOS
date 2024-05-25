@@ -56,8 +56,11 @@ void main()
                 }
                 if (is_jump == 1)
                 {
+                    // reload at here
                     show_jump(current_w_index, current_h_index, direction);
                     wait_msec(100);
+
+                    re_load_background(current_w_index, current_h_index, 70, 130);
                 }
                 else
                 {
@@ -105,10 +108,13 @@ void main()
                     step += 1;
                     // current_w_index -= 75;
                     // current_h_index -= 57;
+                    re_load_background(current_w_index, current_h_index, 70, 120);
                     current_w_index -= 37;
                     current_h_index -= 40;
                     direction = 0;
                     is_jump = 1;
+
+                    // re load at here
                 }
 
                 if (c == 'd')
@@ -116,10 +122,13 @@ void main()
                     step += 1;
                     // current_w_index += 75;
                     // current_h_index -= 57;
+                    re_load_background(current_w_index, current_h_index, 70, 120);
                     current_w_index += 37;
                     current_h_index -= 40;
                     direction = 1;
                     is_jump = 1;
+
+                    // re load at here
                 }
             }
 
