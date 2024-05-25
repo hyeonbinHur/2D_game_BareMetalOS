@@ -17,9 +17,8 @@ unsigned int gmae_over_flag; // if user die, change to 1
 unsigned int ms_counter;     // check the time
 unsigned int is_jump;        // is the character jumping? 0 = no jumping, 1 = is jumping
 
-unsigned int stage_1_timer;
-unsigned int stage_2_timer;
-unsigned int stage_3_timer;
+unsigned int timer;
+
 unsigned int phase;
 unsigned int stage_start_flag; // stage start flag
 
@@ -31,6 +30,7 @@ int direction; // 1 is right, 0 is left
 void game_start_fn();
 void game_init_fn();
 int is_die_check(int current_character, int current_block, int timer);
+void start_new_stage(int stage);
 
 void main()
 {
@@ -52,6 +52,7 @@ void main()
             {
                 show_stage_clear(stage);
                 stage_start_flag = 1;
+                start_new_stage(stage);
             }
 
             if (step == 0 && is_load_flag == 0 && gmae_over_flag == 0)
@@ -84,7 +85,7 @@ void main()
             c = getUart();
             set_wait_timer(0, 0);
             ms_counter++;
-            show_timer(stage_1_timer);
+            show_timer(timer);
 
             // move logic
             if (is_jump == 1)
@@ -132,7 +133,6 @@ void main()
                     current_h_index -= 40;
                     direction = 1;
                     is_jump = 1;
-
                     // re load at here
                 }
             }
@@ -148,15 +148,29 @@ void main()
             }
 
             // die logic
-            if (step != 0 && is_jump == 1)
+            if (step != 0)
             {
-                if (direction == 0)
+                if (is_jump == 1)
                 {
-                    gmae_over_flag = is_die_check(current_w_index - 38, block_array[step], stage_1_timer);
+                    if (direction == 0)
+                    {
+                        gmae_over_flag = is_die_check(current_w_index - 38, block_array[step], timer);
+                    }
+                    else if (direction == 1)
+                    {
+                        gmae_over_flag = is_die_check(current_w_index + 38, block_array[step], timer);
+                    }
                 }
-                else if (direction == 1)
+                else
                 {
-                    gmae_over_flag = is_die_check(current_w_index + 38, block_array[step], stage_1_timer);
+                    if (direction == 0)
+                    {
+                        gmae_over_flag = is_die_check(current_w_index, block_array[step], timer);
+                    }
+                    else if (direction == 1)
+                    {
+                        gmae_over_flag = is_die_check(current_w_index, block_array[step], timer);
+                    }
                 }
             }
 
@@ -165,7 +179,7 @@ void main()
                 if (ms_counter == 100)
                 {
                     ms_counter = 0;
-                    stage_1_timer -= 1;
+                    timer -= 1;
                 }
                 // move logic
                 if (shiftY == 0)
@@ -176,9 +190,11 @@ void main()
                     stage_start_flag = 0;
                 }
             }
-            if (gmae_over_flag == 1) // game over
+            else if (gmae_over_flag == 1) // game over
             {
-                show_die_character_fn(current_w_index, current_h_index, direction);
+
+                show_die_character_fn(current_w_index, current_h_index, direction, is_jump);
+
                 wait_msec(600);
                 show_game_over_fn();
                 gmae_over_flag = 0;
@@ -237,9 +253,7 @@ void game_init_fn()
     step = 0;
     gmae_over_flag = 0;
     ms_counter = 0;
-    stage_1_timer = 25;
-    stage_2_timer = 20;
-    stage_3_timer = 15;
+    timer = 25;
     phase = 1;
     shiftY = -700;
     stage = 1;
@@ -261,4 +275,19 @@ void game_init_fn()
 
 void start_new_stage(int stage)
 {
+    if (stage == 1)
+    {
+        timer = 5;
+        phase = 1;
+    }
+    else if (stage == 2)
+    {
+        timer = 20;
+        phase = 1;
+    }
+    else if (stage == 3)
+    {
+        timer = 15;
+        phase = 1;
+    }
 }

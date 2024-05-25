@@ -34,8 +34,8 @@ void show_game_over_fn()
             drawPixelARGB32(j, i, 0x000000);
         }
     }
-    drawString(390, 200, "Game Over", 0x00AA0000, 3);
-    drawString(340, 400, "Press r to restart the game", 0x0000BB00, 2);
+    drawString(400, 200, "Game Over", 0x00AA0000, 3);
+    drawString(300, 400, "Press r to restart the game", 0x0000BB00, 2);
 
     while (1)
     {
@@ -147,20 +147,29 @@ void load_character(int start_w, int start_h, int direction)
     }
 }
 
-void show_die_character_fn(int start_w, int start_h, int direction)
+void show_die_character_fn(int start_w, int start_h, int direction, int is_jump)
 {
     int character_w = 110;
     int character_h = 69;
-    if (direction == 1)
+
+    if (is_jump == 1)
     {
-        re_load_background(start_w - 75, start_h + 57, 70, 130);
-        start_w += 50;
+        if (direction == 1)
+        {
+            re_load_background(start_w - 75, start_h + 57, 70, 130);
+            start_w += 50;
+        }
+        else if (direction == 0)
+        {
+            re_load_background(start_w + 75, start_h + 57, 70, 130);
+            start_w -= 50;
+        }
     }
-    else if (direction == 0)
+    else
     {
-        re_load_background(start_w + 75, start_h + 57, 70, 130);
-        start_w -= 50;
+        re_load_background(start_w, start_h, 70, 130);
     }
+
     start_h += 100;
     for (int h = start_h; h < start_h + character_h; h++)
     {
