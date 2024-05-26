@@ -8,6 +8,7 @@ const int screen_width = 1024;
 const int screen_height = 768;
 
 struct screenData screen[1024][768];
+struct screenData screen_for_transition[1024][768];
 
 const int background_og_height = 948;
 const int background_og_width = 177;
@@ -34,8 +35,8 @@ void show_game_over_fn()
             drawPixelARGB32(j, i, 0x000000);
         }
     }
-    drawString(390, 200, "Game Over", 0x00AA0000, 3);
-    drawString(340, 400, "Press r to restart the game", 0x0000BB00, 2);
+    drawString(400, 200, "Game Over", 0x00AA0000, 3);
+    drawString(300, 400, "Press r to restart the game", 0x0000BB00, 2);
 
     while (1)
     {
@@ -108,23 +109,24 @@ void loadBlock(int start_x, int start_y, int stage)
                 attr = epd_bitmap_stage_3_block[(y - start_y) * img_w + (x - start_x)];
             }
             screen[x][y].prev_value = attr;
-            drawPixelARGB32(x, y, attr); // Y 오프셋을 적용하여 중앙에 이미지를 그림
+            drawPixelARGB32(x, y, attr);
         }
     }
 }
 
 void load_character(int start_w, int start_h, int direction)
 {
+    // uart_sendi(start_h);
     int character_w = 70;
     int character_h = 120;
-    if (direction == 1)
-    {
-        re_load_background(start_w - 38, start_h + 17, character_w, 130);
-    }
-    else if (direction == 0)
-    {
-        re_load_background(start_w + 38, start_h + 17, character_w, 130);
-    }
+    // if (direction == 1)
+    // {
+    //     re_load_background(start_w - 38, start_h + 17, character_w, 130);
+    // }
+    // else if (direction == 0)
+    // {
+    //     re_load_background(start_w + 38, start_h + 17, character_w, 130);
+    // }
     for (int h = start_h; h < start_h + character_h; h++)
     {
         for (int w = start_w; w < start_w + character_w; w++)
@@ -146,20 +148,29 @@ void load_character(int start_w, int start_h, int direction)
     }
 }
 
-void show_die_character_fn(int start_w, int start_h, int direction)
+void show_die_character_fn(int start_w, int start_h, int direction, int is_jump)
 {
     int character_w = 110;
     int character_h = 69;
-    if (direction == 1)
+
+    if (is_jump == 1)
     {
-        re_load_background(start_w - 75, start_h + 57, 70, 120);
-        start_w += 50;
+        if (direction == 1)
+        {
+            re_load_background(start_w - 75, start_h + 57, 70, 130);
+            start_w += 50;
+        }
+        else if (direction == 0)
+        {
+            re_load_background(start_w + 75, start_h + 57, 70, 130);
+            start_w -= 50;
+        }
     }
-    else if (direction == 0)
+    else
     {
-        re_load_background(start_w + 75, start_h + 57, 70, 120);
-        start_w -= 50;
+        re_load_background(start_w, start_h, 70, 130);
     }
+
     start_h += 100;
     for (int h = start_h; h < start_h + character_h; h++)
     {
@@ -189,14 +200,14 @@ unsigned int *create_block_array(unsigned int current_block)
     for (int i = 1; i < 13; i++)
     {
         int temp = block_array[i - 1];
-        if (temp == 24)
-        {
 
-            block_array[i] = 99;
-        }
-        else if (temp == 999)
+        if (temp - 75 < 100)
         {
-            block_array[i] = 924;
+            block_array[i] = temp + 75;
+        }
+        else if (temp + 75 > 900)
+        {
+            block_array[i] = temp - 75;
         }
         else
         {
@@ -214,12 +225,12 @@ unsigned int *create_block_array(unsigned int current_block)
     return block_array;
 }
 
-void create_block(unsigned int *block_array)
+void create_block(unsigned int *block_array, int stage)
 {
     int h = 708;
     for (int i = 0; i < 13; i++)
     {
-        loadBlock(block_array[i], h, 1);
+        loadBlock(block_array[i], h, stage);
         h -= 57;
     }
 }
@@ -285,18 +296,6 @@ void show_jump(int start_w, int start_h, int direction)
 {
     int character_w = 70;
     int character_h = 130;
-    if (start_h <= 0)
-    {
-        uart_puts("under 0 \n");
-    }
-    if (direction == 1)
-    {
-        re_load_background(start_w - 37, start_h + 40, character_w, 120);
-    }
-    else if (direction == 0)
-    {
-        re_load_background(start_w + 37, start_h + 40, character_w, 120);
-    }
 
     for (int h = start_h; h < start_h + character_h; h++)
     {
@@ -321,31 +320,183 @@ void show_jump(int start_w, int start_h, int direction)
 
 void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, int img_h)
 {
-    if (start_w < 0)
+    if (img_h == 130 || img_h == 120)
     {
-        start_w = 1;
+        uart_sendi(start_h);
     }
-    if (start_h > 768)
+    if (start_h == -22 || start_h == -79 || start_h == -39)
     {
-        start_h = 767;
-    }
-    if (start_h < 0)
-    {
-        uart_puts("Hello 0 \n");
         start_h = 0;
     }
     for (int w = start_w; w < start_w + img_w; w++)
     {
         for (int h = start_h; h < start_h + img_h; h++)
         {
-            if (h > 0 && w > 0)
+            unsigned int attr = screen[w][h].prev_value;
+            drawPixelARGB32(w, h, attr);
+        }
+    }
+}
+
+void show_stage_clear(int stage)
+{
+
+    int x = 1024;
+    int y = 768;
+
+    for (int i = 0; i < y; i++)
+    {
+        for (int j = 0; j < x; j++)
+        {
+            drawPixelARGB32(j, i, 0x000000);
+        }
+    }
+
+    if (stage == 1)
+    {
+
+        drawString(360, 200, "Stage 1 Jungle", 0x00FF00, 3);
+        drawString(290, 400, "Press \"Enter\" to start the game", 0x0000BB00, 2);
+    }
+    else if (stage == 2)
+    {
+        drawString(320, 200, "Stage 2 Antarctica", 0x0000FF, 3);
+        drawString(280, 400, "Press \"Enter\" to start the game", 0x0000FF, 2);
+    }
+    else if (stage == 3)
+    {
+        drawString(290, 200, "Fianl Stage Volcano", 0xFF0000, 3);
+        drawString(250, 400, "Press \"Enter\" to restart the game", 0xFF0000, 2);
+    }
+    unsigned char c;
+
+    while (1)
+    {
+        c = uart_getc();
+        if (c == '\n')
+        {
+            break;
+        }
+    }
+
+    uart_puts("escape show stage \n");
+}
+
+void load_background_with_transition(unsigned int *block_array, int stage, int shiftY, int current_w_index, int direction)
+{
+    store_background_for_transition(shiftY, stage);
+    store_block_for_transition(block_array, stage);
+    store_character_for_transition(current_w_index, 708 - 120, direction);
+
+    for (int i = 10; i > 0; i--)
+    {
+        for (int w = 0; w < 1024; w++)
+        {
+            for (int h = 0; h < 768 - i * (768 / 10); h++)
             {
-                unsigned int attr = screen[w][h].prev_value;
+                unsigned int attr = screen_for_transition[w][768 - ((768 / i) - h)].current_value;
                 drawPixelARGB32(w, h, attr);
             }
-            else
+        }
+        uart_puts(" complete transition\n");
+    }
+}
+
+void store_background_for_transition(int shiftY, int stage)
+{
+    int originalHeight = 948;                   // 상단 절반의 원래 높이
+    int originalWidth = 177;                    // 원본 가로 크기
+    float scaleX = 1024.0 / originalWidth;      // 가로 스케일 비율
+    int scaledWidth = 1024;                     // 스케일된 가로 크기, 화면을 꽉 채움
+    int scaledHeight = originalHeight * scaleX; // 스케일된 세로 크기
+
+    // int yOffset = (768 - scaledHeight) / 2; // 세로 중앙 정렬을 위한 Y 오프셋
+    // int shiftY = -350;                      // 아래로 이동시킬 픽셀 수
+    for (int y = 0; y < 768; y++)
+    {
+        for (int x = 0; x < 1024; x++)
+        {
+            int srcY = y / scaleX - shiftY;
+            int srcX = x / scaleX;                     // 원본 이미지에서의 X 인덱스
+            int index = (srcY * originalWidth + srcX); // 원본 이미지의 RGB888 데이터 인덱스
+
+            unsigned int attr;
+            if (stage == 1)
             {
-                uart_puts("under 0\n");
+                attr = epd_bitmap_stage1[index];
+            }
+            else if (stage == 2)
+            {
+                attr = epd_bitmap_stage2[index];
+            }
+            else if (stage == 3)
+            {
+                attr = epd_bitmap_stage3[index];
+            }
+
+            screen_for_transition[x][y].current_value = attr;
+        }
+    }
+}
+void store_block_for_transition(unsigned int *block_array, int stage)
+{
+    int h = 708;
+    for (int i = 0; i < 13; i++)
+    {
+        store_block_for_transition2(block_array[i], h, stage);
+        h -= 57;
+    }
+}
+void store_block_for_transition2(int start_x, int start_y, int stage)
+{
+    for (int i = 0; i < 13; i++)
+    {
+        int img_w = 75;
+        int img_h = 40;
+
+        for (int y = start_y; y < start_y + img_h; y++)
+        {
+            for (int x = start_x; x < start_x + img_w; x++)
+            {
+                unsigned int attr;
+                if (stage == 1)
+                {
+                    attr = epd_bitmap_stage_1_block[(y - start_y) * img_w + (x - start_x)];
+                }
+                else if (stage == 2)
+                {
+                    attr = epd_bitmap_stage_2_block[(y - start_y) * img_w + (x - start_x)];
+                }
+                else if (stage == 3)
+                {
+                    attr = epd_bitmap_stage_3_block[(y - start_y) * img_w + (x - start_x)];
+                }
+                screen_for_transition[x][y].current_value = attr;
+            }
+        }
+    }
+}
+void store_character_for_transition(int start_w, int start_h, int direction)
+{
+    int character_w = 70;
+    int character_h = 120;
+
+    for (int h = start_h; h < start_h + character_h; h++)
+    {
+        for (int w = start_w; w < start_w + character_w; w++)
+        {
+            unsigned int attr;
+            if (direction == 1)
+            {
+                attr = epd_bitmap_right_stand[(h - start_h) * character_w + (w - start_w)];
+            }
+            else if (direction == 0)
+            {
+                attr = epd_bitmap_left_stand[(h - start_h) * character_w + (w - start_w)];
+            }
+            if (attr != 0x00000000)
+            {
+                screen_for_transition[w][h].current_value = attr;
             }
         }
     }
