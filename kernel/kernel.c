@@ -63,7 +63,7 @@ void main()
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
-                    create_monster_array(monster_index, stage);
+                    monster_index = create_monster_array(monster_index, stage);
                 }
                 else if (stage == 2)
                 {

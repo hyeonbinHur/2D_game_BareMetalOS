@@ -276,7 +276,7 @@ unsigned int *create_block_array(unsigned int current_block)
     return block_array;
 }
 
-void *create_monster_array(unsigned int current_monster_index, int stage)
+unsigned int *create_monster_array(unsigned int current_monster_index, int stage)
 {
     static unsigned int moster_index_arr[12];
     for (int i = 0; i < 11; i++)
@@ -325,9 +325,11 @@ void *create_monster_array(unsigned int current_monster_index, int stage)
             moster_index_arr[monster_index] = 1;
         }
     }
-    uart_puts("complete load monster arr \n");
+    // uart_puts("complete load monster arr \n");
 
     create_monster(moster_index_arr, stage);
+
+    return moster_index_arr;
 }
 
 void create_monster(unsigned int *monster_index, int stage)
@@ -342,7 +344,7 @@ void create_monster(unsigned int *monster_index, int stage)
 
     for (int i = 0; i < 11; i++)
     {
-        uart_puts("complete create monster \n");
+        // uart_puts("complete create monster \n");
 
         if (monster_index[i] == 1)
         {
@@ -677,3 +679,5 @@ void store_character_for_transition(int start_w, int start_h, int direction)
         }
     }
 }
+
+// void shoot_Ball(unsigned int *array)
