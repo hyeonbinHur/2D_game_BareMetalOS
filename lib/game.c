@@ -16,6 +16,74 @@ const float background_scaleX = 1024.0 / background_og_width;
 const int background_scaled_width = screen_width;
 const int background_scaled_height = background_og_height * background_scaleX;
 
+void create_bullet(int current_bullet_w, int stage, unsigned int *monster_index)
+{
+
+    int monster_array_value = 651;
+    unsigned int monster_position_array[12];
+    for (int i = 0; i < 11; i++)
+    {
+        monster_position_array[i] = monster_array_value;
+        monster_array_value -= 57;
+    }
+
+    for (int i = 0; i < 11; i++)
+    {
+        if (monster_index[i] == 1)
+        {
+            if (current_bullet_w == 63)
+            {
+                re_load_background(963, monster_position_array[i], 50, 50);
+            }
+
+            re_load_background(current_bullet_w, monster_position_array[i], 50, 50);
+
+            load_bullet(current_bullet_w + 20, monster_position_array[i], stage);
+        }
+    }
+    // if (current_bullet_w == 1020)
+    // {
+    //     current_bullet_w = 63;
+    // }
+    // else
+    // {
+    //     current_bullet_w += 20;
+    // }
+
+    // return current_bullet_w;
+}
+
+void load_bullet(int current_bullet_w, int current_bullet_h, int stage)
+{
+    int bullet_w = 50;
+    int bullet_h = 50;
+
+    for (int w = current_bullet_w; w < current_bullet_w + bullet_w; w++)
+    {
+        for (int h = current_bullet_h; h < current_bullet_h + bullet_h; h++)
+        {
+            unsigned int attr;
+            if (stage == 1)
+            {
+                attr = epd_bitmap_stage1_ball[(h - current_bullet_h) * bullet_w + (w - current_bullet_w)];
+            }
+            else if (stage == 2)
+            {
+                attr = epd_bitmap_stage2_ball[(h - current_bullet_h) * bullet_w + (w - current_bullet_w)];
+            }
+            else if (stage == 3)
+            {
+                attr = epd_bitmap_stage3_ball[(h - current_bullet_h) * bullet_w + (w - current_bullet_w)];
+            }
+
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(w, h, attr);
+            }
+        }
+    }
+}
+
 void all_clear()
 {
     int img_w = 100;

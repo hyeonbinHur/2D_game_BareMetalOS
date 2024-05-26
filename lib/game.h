@@ -12,6 +12,7 @@ void show_jump(int start_w, int start_h, int direction);
 void show_stage_clear(int stage);
 void all_clear();
 unsigned int *create_monster_array(unsigned int current_monster_index, int stage);
+void create_bullet(int current_bullet_w, int stage, unsigned int *monster_index);
 
 void load_background_with_transition(unsigned int *block_array, int stage, int shiftY, int current_w_index, int direction);
 struct screenData
