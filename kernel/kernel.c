@@ -416,6 +416,13 @@ void pause_mode()
                     uart_puts("Available stages are only 1, 2, and 3 \n");
                 }
             }
+            else if (my_strncmp(currentCommand, "uart_config", 11))
+            {
+                uart_puts("current uart is uart 1 \n");
+                uart_puts("baud rate = 115200 \n");
+                uart_puts("data bit  = 8 \n");
+                uart_puts("handshaking  = off \n");
+            }
             else
             {
                 uart_puts("\"");
