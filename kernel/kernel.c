@@ -145,7 +145,7 @@ void main()
                 shiftY += 100;
                 current_h_index = 708 - 120;
                 block_array = create_block_array(block_array[12]);
-                load_background_with_transition(block_array, stage, shiftY, current_w_index, direction);
+                // load_background_with_transition(block_array, stage, shiftY, current_w_index, direction);
             }
 
             // die logic

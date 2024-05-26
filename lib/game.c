@@ -387,14 +387,15 @@ void load_background_with_transition(unsigned int *block_array, int stage, int s
     store_background_for_transition(shiftY, stage);
     store_block_for_transition(block_array, stage);
     store_character_for_transition(current_w_index, 708 - 120, direction);
-
+    // wait_msec(1000);
     for (int i = 10; i > 0; i--)
     {
-        for (int w = 0; w < 1024; w++)
+
+        for (int h = 0; h < 768 - i * (768 / 10); h++)
         {
-            for (int h = 0; h < 768 - i * (768 / 10); h++)
+            for (int w = 0; w < 1024; w++)
             {
-                unsigned int attr = screen_for_transition[w][768 - ((768 / i) - h)].current_value;
+                unsigned int attr = screen_for_transition[w][768 - (768 - i * (768 / 10)) + h].current_value;
                 drawPixelARGB32(w, h, attr);
             }
         }
