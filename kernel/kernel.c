@@ -28,10 +28,15 @@ int direction; // 1 is right, 0 is left
 unsigned int *monster_index;
 
 void all_clear_fn();
+
 void game_start_fn();
+
 void game_init_fn();
+
 int is_die_check(int current_character, int current_block, int timer);
+
 void start_new_stage(int stage);
+
 void pause_mode();
 
 void main()
@@ -117,8 +122,6 @@ void main()
                 if (c == 'a')
                 {
                     step += 1;
-                    // current_w_index -= 75;
-                    // current_h_index -= 57;
                     re_load_background(current_w_index, current_h_index, 70, 120);
                     current_w_index -= 37;
                     current_h_index -= 40;
@@ -131,8 +134,6 @@ void main()
                 else if (c == 'd')
                 {
                     step += 1;
-                    // current_w_index += 75;
-                    // current_h_index -= 57;
                     re_load_background(current_w_index, current_h_index, 70, 120);
                     current_w_index += 37;
                     current_h_index -= 40;
@@ -189,6 +190,7 @@ void main()
 
             if (gmae_over_flag == 0)
             {
+
                 if (ms_counter == 100)
                 {
                     ms_counter = 0;
@@ -211,7 +213,6 @@ void main()
             {
 
                 show_die_character_fn(current_w_index, current_h_index, direction, is_jump);
-
                 wait_msec(600);
                 show_game_over_fn();
                 gmae_over_flag = 0;
@@ -316,6 +317,7 @@ void all_clear_fn()
     {
     }
 }
+
 void pause_mode()
 {
     drawString(450, 300, "PAUSE", 0x00AA0000, 4);
