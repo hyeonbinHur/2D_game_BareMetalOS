@@ -17,3 +17,5 @@ extern const unsigned long epd_bitmap_left_jump[];
 extern const unsigned long epd_bitmap_right_jump[];
 extern const unsigned long epd_bitmap_right_die[];
 extern const unsigned long epd_bitmap_left_die[];
+extern const unsigned long epd_bitmap_fire_right[];
+extern const unsigned long epd_bitmap_fire_left[];

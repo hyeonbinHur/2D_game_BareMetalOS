@@ -26,6 +26,7 @@ unsigned int is_load_flag;
 int shiftY;
 int stage;
 int direction; // 1 is right, 0 is left
+void all_clear_fn();
 
 void game_start_fn();
 void game_init_fn();
@@ -47,7 +48,6 @@ void main()
         if (game_start == 1)
         {
             // load items logic
-
             if (stage_start_flag == 0)
             {
                 show_stage_clear(stage);
@@ -189,6 +189,10 @@ void main()
                     shiftY = -700;
                     stage++;
                     stage_start_flag = 0;
+                    if (stage == 4)
+                    {
+                        all_clear_fn();
+                    }
                 }
             }
             else if (gmae_over_flag == 1) // game over
@@ -278,7 +282,7 @@ void start_new_stage(int stage)
 {
     if (stage == 1)
     {
-        timer = 5;
+        timer = 25;
         phase = 1;
     }
     else if (stage == 2)
@@ -290,5 +294,13 @@ void start_new_stage(int stage)
     {
         timer = 15;
         phase = 1;
+    }
+}
+
+void all_clear_fn()
+{
+    all_clear();
+    while (1)
+    {
     }
 }
