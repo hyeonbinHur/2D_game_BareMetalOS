@@ -18,7 +18,6 @@ unsigned int ms_counter;     // check the time
 unsigned int is_jump;        // is the character jumping? 0 = no jumping, 1 = is jumping
 
 unsigned int timer;
-
 unsigned int phase;
 unsigned int stage_start_flag; // stage start flag
 
@@ -26,12 +25,14 @@ unsigned int is_load_flag;
 int shiftY;
 int stage;
 int direction; // 1 is right, 0 is left
-void all_clear_fn();
+unsigned int *monster_index;
 
+void all_clear_fn();
 void game_start_fn();
 void game_init_fn();
 int is_die_check(int current_character, int current_block, int timer);
 void start_new_stage(int stage);
+void pause_mode();
 
 void main()
 {
@@ -62,16 +63,19 @@ void main()
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
+                    monster_index = create_monster_array(monster_index, stage);
                 }
                 else if (stage == 2)
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
+                    create_monster_array(monster_index, stage);
                 }
                 else if (stage == 3)
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
+                    create_monster_array(monster_index, stage);
                 }
 
                 show_phase(phase);
@@ -121,9 +125,10 @@ void main()
                     direction = 0;
                     is_jump = 1;
                     // re load at here
+                    uart_puts("character moves to \"left\" side \n");
                 }
 
-                if (c == 'd')
+                else if (c == 'd')
                 {
                     step += 1;
                     // current_w_index += 75;
@@ -134,6 +139,13 @@ void main()
                     direction = 1;
                     is_jump = 1;
                     // re load at here
+                    uart_puts("character moves to \"right\" side \n");
+                }
+                else if (c == ' ')
+                {
+                    uart_puts("\" space \" pressed \n");
+                    pause_mode();
+                    re_load_background(450, 300, 200, 50);
                 }
             }
 
@@ -302,5 +314,130 @@ void all_clear_fn()
     all_clear();
     while (1)
     {
+    }
+}
+void pause_mode()
+{
+    drawString(450, 300, "PAUSE", 0x00AA0000, 4);
+    static char currentCommand[100];
+    int charIndex = 0;
+    while (1)
+    {
+        char c = uart_getc();
+        if (c == ' ')
+        {
+            uart_sendc('\n');
+            break;
+        }
+
+        else if (c != ' ' && c != '\n')
+        {
+            if (c == 127)
+            {
+                if (charIndex > 0)
+                {
+                    currentCommand[charIndex] = '\0';
+                    uart_sendc('\b');
+                    uart_sendc(' ');
+                    uart_sendc('\b');
+                    charIndex--;
+                }
+            }
+            else
+            {
+                uart_sendc(c);
+                currentCommand[charIndex] = c;
+                charIndex++;
+            }
+        }
+        else if (c == '\n')
+        {
+            uart_sendc(c);
+
+            currentCommand[charIndex] = '\0';
+            if (my_strncmp(currentCommand, "stage_?", 7))
+            {
+                uart_puts("current stage is ");
+                uart_sendi(stage);
+                uart_puts("\n");
+            }
+            else if (my_strncmp(currentCommand, "block_?", 7))
+            {
+                int num_of_block = phase * 11 + 1 - (12 - step);
+                uart_puts("you went up ");
+                uart_sendi(num_of_block);
+                uart_puts(" blocks \n");
+            }
+            else if (my_strncmp(currentCommand, "character_?", 11))
+            {
+                uart_puts("character's current x coordinate : ");
+                uart_sendi(current_w_index);
+                uart_puts("\n");
+                uart_puts("character's current y coordinate : ");
+                uart_sendi(current_h_index);
+                uart_puts("\n");
+            }
+            else if (my_strncmp(currentCommand, "stage=", 6))
+            {
+                char *destination_stage = my_strstr(currentCommand, "=");
+                destination_stage += 1;
+
+                if (my_strncmp(destination_stage, "1", 1) == 1)
+                {
+                    stage = 1;
+                    stage_start_flag = 0;
+                    is_load_flag = 0;
+                    shiftY = -700;
+                    step = 0;
+                    current_h_index = 708 - 120;
+                    gmae_over_flag = 0;
+                    current_w_index = block_array[0];
+                }
+                else if (my_strncmp(destination_stage, "2", 1) == 1)
+                {
+                    stage = 2;
+                    stage_start_flag = 0;
+                    is_load_flag = 0;
+                    shiftY = -700;
+                    current_h_index = 708 - 120;
+                    step = 0;
+                    gmae_over_flag = 0;
+                    current_w_index = block_array[0];
+                }
+                else if (my_strncmp(destination_stage, "3", 1) == 1)
+                {
+                    stage = 3;
+                    stage_start_flag = 0;
+                    is_load_flag = 0;
+                    shiftY = -700;
+                    current_h_index = 708 - 120;
+                    gmae_over_flag = 0;
+                    step = 0;
+                    current_w_index = block_array[0];
+                }
+                else
+                {
+                    uart_puts("Available stages are only 1, 2, and 3 \n");
+                }
+            }
+            else if (my_strncmp(currentCommand, "uart_config", 11))
+            {
+                uart_puts("current uart is uart 1 \n");
+                uart_puts("baud rate = 115200 \n");
+                uart_puts("data bit  = 8 \n");
+                uart_puts("handshaking  = off \n");
+            }
+            else
+            {
+                uart_puts("\"");
+                for (int i = 0; i < charIndex; i++)
+                {
+                    uart_sendc(currentCommand[i]);
+                }
+
+                uart_puts("\" is not supported command \n");
+            }
+            charIndex = 0;
+        }
     }
 }

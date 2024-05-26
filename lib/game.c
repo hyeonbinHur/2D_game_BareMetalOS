@@ -276,6 +276,135 @@ unsigned int *create_block_array(unsigned int current_block)
     return block_array;
 }
 
+unsigned int *create_monster_array(unsigned int current_monster_index, int stage)
+{
+    static unsigned int moster_index_arr[12];
+    for (int i = 0; i < 11; i++)
+    {
+        moster_index_arr[i] = 0;
+    }
+
+    if (stage == 1)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            int monster_index = 0;
+            for (int j = 0; j < 10; j++)
+            {
+                int n = generateRandomBit();
+                monster_index += n;
+            }
+            moster_index_arr[monster_index] = 1;
+        }
+    }
+
+    else if (stage == 2)
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            int monster_index = 0;
+            for (int j = 0; j < 10; j++)
+            {
+                int n = generateRandomBit();
+                monster_index += n;
+            }
+            moster_index_arr[monster_index] = 1;
+        }
+    }
+
+    else if (stage == 3)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            int monster_index = 0;
+            for (int j = 0; j < 10; j++)
+            {
+                int n = generateRandomBit();
+                monster_index += n;
+            }
+            moster_index_arr[monster_index] = 1;
+        }
+    }
+    // uart_puts("complete load monster arr \n");
+
+    create_monster(moster_index_arr, stage);
+
+    return moster_index_arr;
+}
+
+void create_monster(unsigned int *monster_index, int stage)
+{
+    int monster_array_value = 651;
+    unsigned int monster_position_array[12];
+    for (int i = 0; i < 11; i++)
+    {
+        monster_position_array[i] = monster_array_value;
+        monster_array_value -= 57;
+    }
+
+    for (int i = 0; i < 11; i++)
+    {
+        // uart_puts("complete create monster \n");
+
+        if (monster_index[i] == 1)
+        {
+            load_monster(monster_position_array[i], stage);
+        }
+    }
+}
+
+void load_monster(unsigned int start_h, int stage)
+{
+    int monster_w = 53;
+    int monster_h = 53;
+    uart_sendi(start_h);
+    if (stage == 1)
+    {
+        for (int w = 10; w < 10 + monster_w; w++)
+        {
+            for (int h = start_h; h < start_h + monster_h; h++)
+            {
+                unsigned int attr;
+                attr = epd_bitmap_stage1_monster[(h - start_h) * monster_w + (w - 10)];
+                if (attr != 0x00000000)
+                {
+                    drawPixelARGB32(w, h, attr);
+                }
+            }
+        }
+    }
+    else if (stage == 2)
+    {
+        for (int w = 10; w < 10 + monster_w; w++)
+        {
+            for (int h = start_h; h < start_h + monster_h; h++)
+            {
+                unsigned int attr;
+                attr = epd_bitmap_stage2_monster[(h - start_h) * monster_w + (w - 10)];
+                if (attr != 0x00000000)
+                {
+                    drawPixelARGB32(w, h, attr);
+                }
+            }
+        }
+    }
+    else if (stage == 3)
+    {
+        for (int w = 10; w < 10 + monster_w; w++)
+        {
+            for (int h = start_h; h < start_h + monster_h; h++)
+            {
+                unsigned int attr;
+                attr = epd_bitmap_stage3_monster[(h - start_h) * monster_w + (w - 10)];
+                if (attr != 0x00000000)
+                {
+                    drawPixelARGB32(w, h, attr);
+                }
+            }
+        }
+    }
+}
+
 void create_block(unsigned int *block_array, int stage)
 {
     int h = 708;
@@ -371,10 +500,7 @@ void show_jump(int start_w, int start_h, int direction)
 
 void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, int img_h)
 {
-    if (img_h == 130 || img_h == 120)
-    {
-        uart_sendi(start_h);
-    }
+
     if (start_h == -22 || start_h == -79 || start_h == -39)
     {
         start_h = 0;
@@ -553,3 +679,5 @@ void store_character_for_transition(int start_w, int start_h, int direction)
         }
     }
 }
+
+// void shoot_Ball(unsigned int *array)
