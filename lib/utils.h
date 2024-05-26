@@ -21,3 +21,9 @@ extern const unsigned long epd_bitmap_right_die[];
 extern const unsigned long epd_bitmap_left_die[];
 extern const unsigned long epd_bitmap_fire_right[];
 extern const unsigned long epd_bitmap_fire_left[];
+extern const unsigned long epd_bitmap_stage3_monster[];
+extern const unsigned long epd_bitmap_stage2_monster[];
+extern const unsigned long epd_bitmap_stage1_monster[];
+extern const unsigned long epd_bitmap_stage3_ball[];
+extern const unsigned long epd_bitmap_stage2_ball[];
+extern const unsigned long epd_bitmap_stage1_ball[] extern
