@@ -10,6 +10,7 @@ void show_die_character_fn(int start_w, int start_h, int direction, int is_jump)
 void show_phase(int phase);
 void show_jump(int start_w, int start_h, int direction);
 void show_stage_clear(int stage);
+void load_background_with_transition(unsigned int *block_array, int stage, int shiftY, int current_w_index, int direction);
 struct screenData
 {
     unsigned int current_value;
@@ -17,3 +18,5 @@ struct screenData
 };
 
 extern struct screenData screen[1024][768];
+
+extern struct screenData screen_for_transition[1024][768];

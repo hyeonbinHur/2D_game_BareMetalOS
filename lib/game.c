@@ -8,6 +8,7 @@ const int screen_width = 1024;
 const int screen_height = 768;
 
 struct screenData screen[1024][768];
+struct screenData screen_for_transition[1024][768];
 
 const int background_og_height = 948;
 const int background_og_width = 177;
@@ -379,4 +380,124 @@ void show_stage_clear(int stage)
     }
 
     uart_puts("escape show stage \n");
+}
+
+void load_background_with_transition(unsigned int *block_array, int stage, int shiftY, int current_w_index, int direction)
+{
+    store_background_for_transition(shiftY, stage);
+    store_block_for_transition(block_array, stage);
+    store_character_for_transition(current_w_index, 708 - 120, direction);
+
+    for (int i = 10; i > 0; i--)
+    {
+        for (int w = 0; w < 1024; w++)
+        {
+            for (int h = 0; h < 768 - i * (768 / 10); h++)
+            {
+                unsigned int attr = screen_for_transition[w][768 - ((768 / i) - h)].current_value;
+                drawPixelARGB32(w, h, attr);
+            }
+        }
+        uart_puts(" complete transition\n");
+    }
+}
+
+void store_background_for_transition(int shiftY, int stage)
+{
+    int originalHeight = 948;                   // 상단 절반의 원래 높이
+    int originalWidth = 177;                    // 원본 가로 크기
+    float scaleX = 1024.0 / originalWidth;      // 가로 스케일 비율
+    int scaledWidth = 1024;                     // 스케일된 가로 크기, 화면을 꽉 채움
+    int scaledHeight = originalHeight * scaleX; // 스케일된 세로 크기
+
+    // int yOffset = (768 - scaledHeight) / 2; // 세로 중앙 정렬을 위한 Y 오프셋
+    // int shiftY = -350;                      // 아래로 이동시킬 픽셀 수
+    for (int y = 0; y < 768; y++)
+    {
+        for (int x = 0; x < 1024; x++)
+        {
+            int srcY = y / scaleX - shiftY;
+            int srcX = x / scaleX;                     // 원본 이미지에서의 X 인덱스
+            int index = (srcY * originalWidth + srcX); // 원본 이미지의 RGB888 데이터 인덱스
+
+            unsigned int attr;
+            if (stage == 1)
+            {
+                attr = epd_bitmap_stage1[index];
+            }
+            else if (stage == 2)
+            {
+                attr = epd_bitmap_stage2[index];
+            }
+            else if (stage == 3)
+            {
+                attr = epd_bitmap_stage3[index];
+            }
+
+            screen_for_transition[x][y].current_value = attr;
+        }
+    }
+}
+void store_block_for_transition(unsigned int *block_array, int stage)
+{
+    int h = 708;
+    for (int i = 0; i < 13; i++)
+    {
+        store_block_for_transition2(block_array[i], h, stage);
+        h -= 57;
+    }
+}
+void store_block_for_transition2(int start_x, int start_y, int stage)
+{
+    for (int i = 0; i < 13; i++)
+    {
+        int img_w = 75;
+        int img_h = 40;
+
+        for (int y = start_y; y < start_y + img_h; y++)
+        {
+            for (int x = start_x; x < start_x + img_w; x++)
+            {
+                unsigned int attr;
+                if (stage == 1)
+                {
+                    attr = epd_bitmap_stage_1_block[(y - start_y) * img_w + (x - start_x)];
+                }
+                else if (stage == 2)
+                {
+                    attr = epd_bitmap_stage_2_block[(y - start_y) * img_w + (x - start_x)];
+                }
+                else if (stage == 3)
+                {
+                    attr = epd_bitmap_stage_3_block[(y - start_y) * img_w + (x - start_x)];
+                }
+                screen_for_transition[x][y].current_value = attr;
+            }
+        }
+    }
+}
+void store_character_for_transition(int start_w, int start_h, int direction)
+{
+    int character_w = 70;
+    int character_h = 120;
+
+    for (int h = start_h; h < start_h + character_h; h++)
+    {
+        for (int w = start_w; w < start_w + character_w; w++)
+        {
+            unsigned int attr;
+            if (direction == 1)
+            {
+                attr = epd_bitmap_right_stand[(h - start_h) * character_w + (w - start_w)];
+            }
+            else if (direction == 0)
+            {
+                attr = epd_bitmap_left_stand[(h - start_h) * character_w + (w - start_w)];
+            }
+            if (attr != 0x00000000)
+            {
+                screen_for_transition[w][h].current_value = attr;
+            }
+        }
+    }
 }
