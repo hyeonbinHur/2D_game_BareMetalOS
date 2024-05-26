@@ -25,6 +25,7 @@ unsigned int is_load_flag;
 int shiftY;
 int stage;
 int direction; // 1 is right, 0 is left
+unsigned int *monster_index;
 
 void all_clear_fn();
 void game_start_fn();
@@ -62,16 +63,19 @@ void main()
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
+                    create_monster_array(monster_index, stage);
                 }
                 else if (stage == 2)
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
+                    create_monster_array(monster_index, stage);
                 }
                 else if (stage == 3)
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
+                    create_monster_array(monster_index, stage);
                 }
 
                 show_phase(phase);

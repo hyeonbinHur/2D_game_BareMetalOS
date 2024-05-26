@@ -6,7 +6,6 @@ void set_wait_timer(int set, unsigned int msVal);
 void uart_sendi(int num);
 int my_strncmp(const char *command, const char *compare, int index);
 char *my_strstr(const char *haystack, const char *needle);
-
 extern const unsigned long epd_bitmap_stage1[];
 extern const unsigned long epd_bitmap_stage2[];
 extern const unsigned long epd_bitmap_stage3[];
@@ -26,4 +25,4 @@ extern const unsigned long epd_bitmap_stage2_monster[];
 extern const unsigned long epd_bitmap_stage1_monster[];
 extern const unsigned long epd_bitmap_stage3_ball[];
 extern const unsigned long epd_bitmap_stage2_ball[];
-extern const unsigned long epd_bitmap_stage1_ball[] extern
+extern const unsigned long epd_bitmap_stage1_ball[];
