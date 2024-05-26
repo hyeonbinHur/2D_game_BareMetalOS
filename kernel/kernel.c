@@ -26,6 +26,7 @@ int shiftY;
 int stage;
 int direction; // 1 is right, 0 is left
 unsigned int *monster_index;
+unsigned int current_bullet_w;
 
 void all_clear_fn();
 
@@ -74,13 +75,13 @@ void main()
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
-                    create_monster_array(monster_index, stage);
+                    monster_index = create_monster_array(monster_index, stage);
                 }
                 else if (stage == 3)
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
-                    create_monster_array(monster_index, stage);
+                    monster_index = create_monster_array(monster_index, stage);
                 }
 
                 show_phase(phase);
@@ -94,6 +95,7 @@ void main()
             c = getUart();
             set_wait_timer(0, 0);
             ms_counter++;
+
             show_timer(timer);
 
             // move logic
@@ -157,6 +159,7 @@ void main()
                 phase++;
                 shiftY += 100;
                 current_h_index = 708 - 120;
+                current_bullet_w = 63;
                 block_array = create_block_array(block_array[12]);
                 // load_background_with_transition(block_array, stage, shiftY, current_w_index, direction);
             }
@@ -190,7 +193,15 @@ void main()
 
             if (gmae_over_flag == 0)
             {
-
+                if (ms_counter % 5 == 0)
+                {
+                    create_bullet(current_bullet_w, stage, monster_index);
+                    current_bullet_w += 20;
+                    if (current_bullet_w == 963)
+                    {
+                        current_bullet_w = 63;
+                    }
+                }
                 if (ms_counter == 100)
                 {
                     ms_counter = 0;
@@ -209,6 +220,7 @@ void main()
                     }
                 }
             }
+
             else if (gmae_over_flag == 1) // game over
             {
 
@@ -265,6 +277,7 @@ void game_start_fn()
 
 void game_init_fn()
 {
+    current_bullet_w = 63;
     first_block = 399;
     current_w_index = 399;
     current_h_index = 588;
