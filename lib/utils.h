@@ -4,6 +4,7 @@ unsigned char getUart();
 void wait_msec(unsigned int msVal);
 void set_wait_timer(int set, unsigned int msVal);
 void uart_sendi(int num);
+int my_strncmp(const char *command, const char *compare, int index);
 
 extern const unsigned long epd_bitmap_stage1[];
 extern const unsigned long epd_bitmap_stage2[];

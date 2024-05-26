@@ -142,6 +142,7 @@ void main()
                 {
                     uart_puts("\" space \" pressed \n");
                     pause_mode();
+                    re_load_background(450, 300, 200, 50);
                 }
             }
 
@@ -315,7 +316,40 @@ void all_clear_fn()
 void pause_mode()
 {
     drawString(450, 300, "PAUSE", 0x00AA0000, 4);
+    static char currentCommand[100];
+    int charIndex = 0;
     while (1)
     {
+        char c = uart_getc();
+        if (c == ' ')
+        {
+            break;
+        }
+
+        else if (c != ' ' && c != '\n')
+        {
+            if (c == '\b')
+            {
+                if (charIndex > 0)
+                {
+                    currentCommand[charIndex] = '\0';
+                    uart_sendc('\b');
+                    uart_sendc(' ');
+                    uart_sendc('\b');
+                    charIndex--;
+                }
+            }
+            else
+            {
+                uart_sendc(c);
+                currentCommand[charIndex] = c;
+                charIndex++;
+            }
+        }
+        else if (c == '\n')
+        {
+            currentCommand[charIndex] = '\0';
+            charIndex = 0;
+        }
     }
 }
