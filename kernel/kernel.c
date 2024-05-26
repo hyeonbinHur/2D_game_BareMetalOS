@@ -18,7 +18,6 @@ unsigned int ms_counter;     // check the time
 unsigned int is_jump;        // is the character jumping? 0 = no jumping, 1 = is jumping
 
 unsigned int timer;
-
 unsigned int phase;
 unsigned int stage_start_flag; // stage start flag
 
@@ -373,6 +372,49 @@ void pause_mode()
                 uart_puts("character's current y coordinate : ");
                 uart_sendi(current_h_index);
                 uart_puts("\n");
+            }
+            else if (my_strncmp(currentCommand, "stage=", 6))
+            {
+                char *destination_stage = my_strstr(currentCommand, "=");
+                destination_stage += 1;
+
+                if (my_strncmp(destination_stage, "1", 1) == 1)
+                {
+                    stage = 1;
+                    stage_start_flag = 0;
+                    is_load_flag = 0;
+                    shiftY = -700;
+                    step = 0;
+                    current_h_index = 708 - 120;
+                    gmae_over_flag = 0;
+                    current_w_index = block_array[0];
+                }
+                else if (my_strncmp(destination_stage, "2", 1) == 1)
+                {
+                    stage = 2;
+                    stage_start_flag = 0;
+                    is_load_flag = 0;
+                    shiftY = -700;
+                    current_h_index = 708 - 120;
+                    step = 0;
+                    gmae_over_flag = 0;
+                    current_w_index = block_array[0];
+                }
+                else if (my_strncmp(destination_stage, "3", 1) == 1)
+                {
+                    stage = 3;
+                    stage_start_flag = 0;
+                    is_load_flag = 0;
+                    shiftY = -700;
+                    current_h_index = 708 - 120;
+                    gmae_over_flag = 0;
+                    step = 0;
+                    current_w_index = block_array[0];
+                }
+                else
+                {
+                    uart_puts("Available stages are only 1, 2, and 3 \n");
+                }
             }
             else
             {
