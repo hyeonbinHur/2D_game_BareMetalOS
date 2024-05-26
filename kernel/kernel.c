@@ -26,12 +26,13 @@ unsigned int is_load_flag;
 int shiftY;
 int stage;
 int direction; // 1 is right, 0 is left
-void all_clear_fn();
 
+void all_clear_fn();
 void game_start_fn();
 void game_init_fn();
 int is_die_check(int current_character, int current_block, int timer);
 void start_new_stage(int stage);
+void pause_mode();
 
 void main()
 {
@@ -121,9 +122,10 @@ void main()
                     direction = 0;
                     is_jump = 1;
                     // re load at here
+                    uart_puts("character moves to \"left\" side \n");
                 }
 
-                if (c == 'd')
+                else if (c == 'd')
                 {
                     step += 1;
                     // current_w_index += 75;
@@ -134,6 +136,12 @@ void main()
                     direction = 1;
                     is_jump = 1;
                     // re load at here
+                    uart_puts("character moves to \"right\" side \n");
+                }
+                else if (c == ' ')
+                {
+                    uart_puts("\" space \" pressed \n");
+                    pause_mode();
                 }
             }
 
@@ -300,6 +308,13 @@ void start_new_stage(int stage)
 void all_clear_fn()
 {
     all_clear();
+    while (1)
+    {
+    }
+}
+void pause_mode()
+{
+    drawString(450, 300, "PAUSE", 0x00AA0000, 4);
     while (1)
     {
     }

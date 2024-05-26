@@ -371,10 +371,7 @@ void show_jump(int start_w, int start_h, int direction)
 
 void re_load_background(unsigned int start_w, unsigned int start_h, int img_w, int img_h)
 {
-    if (img_h == 130 || img_h == 120)
-    {
-        uart_sendi(start_h);
-    }
+
     if (start_h == -22 || start_h == -79 || start_h == -39)
     {
         start_h = 0;
