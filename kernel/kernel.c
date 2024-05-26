@@ -323,12 +323,13 @@ void pause_mode()
         char c = uart_getc();
         if (c == ' ')
         {
+            uart_sendc('\n');
             break;
         }
 
         else if (c != ' ' && c != '\n')
         {
-            if (c == '\b')
+            if (c == 127)
             {
                 if (charIndex > 0)
                 {
@@ -348,7 +349,41 @@ void pause_mode()
         }
         else if (c == '\n')
         {
+            uart_sendc(c);
+
             currentCommand[charIndex] = '\0';
+            if (my_strncmp(currentCommand, "stage_?", 7))
+            {
+                uart_puts("current stage is ");
+                uart_sendi(stage);
+                uart_puts("\n");
+            }
+            else if (my_strncmp(currentCommand, "block_?", 7))
+            {
+                int num_of_block = phase * 11 + 1 - (12 - step);
+                uart_puts("you went up ");
+                uart_sendi(num_of_block);
+                uart_puts(" blocks \n");
+            }
+            else if (my_strncmp(currentCommand, "character_?", 11))
+            {
+                uart_puts("character's current x coordinate : ");
+                uart_sendi(current_w_index);
+                uart_puts("\n");
+                uart_puts("character's current y coordinate : ");
+                uart_sendi(current_h_index);
+                uart_puts("\n");
+            }
+            else
+            {
+                uart_puts("\"");
+                for (int i = 0; i < charIndex; i++)
+                {
+                    uart_sendc(currentCommand[i]);
+                }
+
+                uart_puts("\" is not supported command \n");
+            }
             charIndex = 0;
         }
     }
