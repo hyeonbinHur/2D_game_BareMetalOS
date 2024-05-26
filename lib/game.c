@@ -16,6 +16,57 @@ const float background_scaleX = 1024.0 / background_og_width;
 const int background_scaled_width = screen_width;
 const int background_scaled_height = background_og_height * background_scaleX;
 
+void all_clear()
+{
+    int img_w = 100;
+    int img_h = 99;
+
+    int right_start_w = 700;
+    int right_start_h = 300;
+
+    int left_start_w = 200;
+    int left_start_h = 300;
+
+    int x = 1024;
+    int y = 768;
+
+    for (int i = 0; i < y; i++)
+    {
+        for (int j = 0; j < x; j++)
+        {
+            drawPixelARGB32(j, i, 0x000000);
+        }
+    }
+
+    for (int i = left_start_w; i < left_start_w + img_w; i++)
+    {
+        for (int j = left_start_h; j < left_start_h + img_h; j++)
+        {
+            unsigned int attr;
+            attr = epd_bitmap_fire_left[(j - left_start_h) * img_w + (i + left_start_w)];
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(i, j, attr);
+            }
+        }
+    }
+
+    for (int i = right_start_w; i < right_start_w + img_w; i++)
+    {
+        for (int j = right_start_h; j < right_start_h + img_h - 12; j++)
+        {
+            unsigned int attr;
+            attr = epd_bitmap_fire_right[(j - right_start_h) * img_w + (i + right_start_w)];
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(i, j, attr);
+            }
+        }
+    }
+
+    drawString(420, 300, "Complete", 0x00AA0000, 3);
+}
+
 void startGame()
 {
     drawString(330, 200, "Infinity stair", 0x00AA0000, 3);
@@ -387,14 +438,15 @@ void load_background_with_transition(unsigned int *block_array, int stage, int s
     store_background_for_transition(shiftY, stage);
     store_block_for_transition(block_array, stage);
     store_character_for_transition(current_w_index, 708 - 120, direction);
-
+    // wait_msec(1000);
     for (int i = 10; i > 0; i--)
     {
-        for (int w = 0; w < 1024; w++)
+
+        for (int h = 0; h < 768 - i * (768 / 10); h++)
         {
-            for (int h = 0; h < 768 - i * (768 / 10); h++)
+            for (int w = 0; w < 1024; w++)
             {
-                unsigned int attr = screen_for_transition[w][768 - ((768 / i) - h)].current_value;
+                unsigned int attr = screen_for_transition[w][768 - (768 - i * (768 / 10)) + h].current_value;
                 drawPixelARGB32(w, h, attr);
             }
         }
