@@ -16,16 +16,16 @@ const float background_scaleX = 1024.0 / background_og_width;
 const int background_scaled_width = screen_width;
 const int background_scaled_height = background_og_height * background_scaleX;
 
-void create_bullet(int current_bullet_w, int stage, unsigned int *monster_index)
+void create_bullet(int *monster_position_array, int current_bullet_w, int stage, unsigned int *monster_index)
 {
 
-    int monster_array_value = 651;
-    unsigned int monster_position_array[12];
-    for (int i = 0; i < 11; i++)
-    {
-        monster_position_array[i] = monster_array_value;
-        monster_array_value -= 57;
-    }
+    // int monster_array_value = 651;
+    // unsigned int monster_position_array[12];
+    // for (int i = 0; i < 11; i++)
+    // {
+    //     monster_position_array[i] = monster_array_value;
+    //     monster_array_value -= 57;
+    // }
 
     for (int i = 0; i < 11; i++)
     {
@@ -344,7 +344,7 @@ unsigned int *create_block_array(unsigned int current_block)
     return block_array;
 }
 
-unsigned int *create_monster_array(unsigned int current_monster_index, int stage)
+unsigned int *create_monster_array(int *monster_position_array, unsigned int current_monster_index, int stage)
 {
     static unsigned int moster_index_arr[12];
     for (int i = 0; i < 11; i++)
@@ -395,20 +395,20 @@ unsigned int *create_monster_array(unsigned int current_monster_index, int stage
     }
     // uart_puts("complete load monster arr \n");
 
-    create_monster(moster_index_arr, stage);
+    create_monster(monster_position_array, moster_index_arr, stage);
 
     return moster_index_arr;
 }
 
-void create_monster(unsigned int *monster_index, int stage)
+void create_monster(int *monster_position_array, unsigned int *monster_index, int stage)
 {
-    int monster_array_value = 651;
-    unsigned int monster_position_array[12];
-    for (int i = 0; i < 11; i++)
-    {
-        monster_position_array[i] = monster_array_value;
-        monster_array_value -= 57;
-    }
+    // int monster_array_value = 651;
+    // unsigned int monster_position_array[12];
+    // for (int i = 0; i < 11; i++)
+    // {
+    //     monster_position_array[i] = monster_array_value;
+    //     monster_array_value -= 57;
+    // }
 
     for (int i = 0; i < 11; i++)
     {
