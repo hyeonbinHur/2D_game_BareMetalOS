@@ -16,6 +16,39 @@ const float background_scaleX = 1024.0 / background_og_width;
 const int background_scaled_width = screen_width;
 const int background_scaled_height = background_og_height * background_scaleX;
 
+// void walking_character()
+// {
+
+//     int char_w;
+//     int char_h;
+//     int char_w_coor;
+//     int char_h_coor;
+
+//     for (int w = char_w_coor; w < char_w_coor + char_w; w++)
+//     {
+//         for (int h = char_h_coor; h < char_h_coor + char_h; h++)
+//         {
+//             unsigned int attr;
+//             attr = epd_bitmap_right_stand[(h - char_h_coor) * char_w + (w - char_w_coor)];
+//             if (attr != 0x00000000)
+//             {
+//                 drawPixelARGB32(w, h, attr);
+//             }
+//         }
+//     }
+// }
+
+void re_load_black(int start_w, int start_h, int img_w, int img_h)
+{
+    for (int w = start_w; w < start_w + img_w; w++)
+    {
+        for (int h = start_h; h < start_h + img_h; h++)
+        {
+            drawPixelARGB32(w, h, 0x000000);
+        }
+    }
+}
+
 void create_bullet(int *monster_position_array, int current_bullet_w, int stage, unsigned int *monster_index)
 {
 

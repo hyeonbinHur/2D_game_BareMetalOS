@@ -48,9 +48,9 @@ void main()
 {
     // set up serial console
     uart_init();
-
     // Initialize frame buffer
     framebf_init();
+    all_clear_fn();
 
     unsigned char c;
 
@@ -370,16 +370,38 @@ void start_new_stage(int stage)
     }
     else if (stage == 3)
     {
-        timer = 15;
-        phase = 1;
+        timer = 150; // 15
+        phase = 7;   // 1
     }
 }
 
 void all_clear_fn()
 {
     all_clear();
+    int start_w = 100;
+    int start_h = 600;
+    unsigned char c;
     while (1)
     {
+        set_wait_timer(1, 10);
+        c = getUart();
+        set_wait_timer(0, 0);
+        ms_counter++;
+        if (ms_counter == 100)
+        {
+            if (start_w == 100)
+            {
+                re_load_black(870, start_h, 70, 120);
+            }
+            re_load_black(start_w, start_h, 70, 120);
+            start_w += 70;
+            load_character(start_w, start_h, 1);
+            ms_counter = 0;
+        }
+        if (start_w == 870)
+        {
+            start_w = 100;
+        }
     }
 }
 
