@@ -12,10 +12,10 @@ unsigned int game_start;   // if game is started, change to 1
 unsigned int current_w_index; // character's start w index
 unsigned int current_h_index; // character's start h index
 
-unsigned int step;           // if it reach 12, background is changed
-unsigned int gmae_over_flag; // if user die, change to 1
-unsigned int ms_counter;     // check the time
-unsigned int is_jump;        // is the character jumping? 0 = no jumping, 1 = is jumping
+unsigned int step;       // if it reach 12, background is changed
+int game_over_flag;      // if user die, change to 1
+unsigned int ms_counter; // check the time
+unsigned int is_jump;    // is the character jumping? 0 = no jumping, 1 = is jumping
 
 unsigned int timer;
 unsigned int phase;
@@ -28,13 +28,17 @@ int direction; // 1 is right, 0 is left
 unsigned int *monster_index;
 unsigned int current_bullet_w;
 
+int monster_array_value;
+unsigned int monster_position_array[12];
+int die_by_bullet;
+
 void all_clear_fn();
 
 void game_start_fn();
 
 void game_init_fn();
 
-int is_die_check(int current_character, int current_block, int timer);
+int is_die_check(int current_character, int current_block);
 
 void start_new_stage(int stage);
 
@@ -62,31 +66,31 @@ void main()
                 start_new_stage(stage);
             }
 
-            if (step == 0 && is_load_flag == 0 && gmae_over_flag == 0)
+            if (step == 0 && is_load_flag == 0 && game_over_flag == 0)
             {
                 is_load_flag = 1;
                 if (stage == 1)
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
-                    monster_index = create_monster_array(monster_index, stage);
+                    monster_index = create_monster_array(monster_position_array, monster_index, stage);
                 }
                 else if (stage == 2)
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
-                    monster_index = create_monster_array(monster_index, stage);
+                    monster_index = create_monster_array(monster_position_array, monster_index, stage);
                 }
                 else if (stage == 3)
                 {
                     showBackground(shiftY, stage);
                     create_block(block_array, stage);
-                    monster_index = create_monster_array(monster_index, stage);
+                    monster_index = create_monster_array(monster_position_array, monster_index, stage);
                 }
 
                 show_phase(phase);
             }
-            if (is_jump == 0 && gmae_over_flag == 0)
+            if (is_jump == 0 && game_over_flag == 0)
             {
                 load_character(current_w_index, current_h_index, direction);
             }
@@ -171,31 +175,36 @@ void main()
                 {
                     if (direction == 0)
                     {
-                        gmae_over_flag = is_die_check(current_w_index - 38, block_array[step], timer);
+                        game_over_flag = is_die_check(current_w_index - 38, block_array[step]);
                     }
                     else if (direction == 1)
                     {
-                        gmae_over_flag = is_die_check(current_w_index + 38, block_array[step], timer);
+                        game_over_flag = is_die_check(current_w_index + 38, block_array[step]);
                     }
                 }
                 else
                 {
                     if (direction == 0)
                     {
-                        gmae_over_flag = is_die_check(current_w_index, block_array[step], timer);
+                        game_over_flag = is_die_check(current_w_index, block_array[step]);
                     }
                     else if (direction == 1)
                     {
-                        gmae_over_flag = is_die_check(current_w_index, block_array[step], timer);
+                        game_over_flag = is_die_check(current_w_index, block_array[step]);
                     }
                 }
             }
+            die_by_bullet = is_shot_fatal_check();
+            if (die_by_bullet == 1)
+            {
+                game_over_flag = 1;
+            }
 
-            if (gmae_over_flag == 0)
+            if (game_over_flag == 0)
             {
                 if (ms_counter % 5 == 0)
                 {
-                    create_bullet(current_bullet_w, stage, monster_index);
+                    create_bullet(monster_position_array, current_bullet_w, stage, monster_index);
                     current_bullet_w += 20;
                     if (current_bullet_w == 963)
                     {
@@ -205,6 +214,10 @@ void main()
                 if (ms_counter == 100)
                 {
                     ms_counter = 0;
+                    if (timer == 1)
+                    {
+                        game_over_flag = 1;
+                    }
                     timer -= 1;
                 }
                 // move logic
@@ -221,13 +234,22 @@ void main()
                 }
             }
 
-            else if (gmae_over_flag == 1) // game over
+            if (game_over_flag == 1) // game over
             {
-
                 show_die_character_fn(current_w_index, current_h_index, direction, is_jump);
+                if (die_by_bullet == 1)
+                {
+                    for (int i = 0; i < 11; i++)
+                    {
+                        if (monster_index[i] == 1)
+                        {
+                            load_bullet(current_bullet_w, monster_position_array[i], stage);
+                        }
+                    }
+                }
                 wait_msec(600);
                 show_game_over_fn();
-                gmae_over_flag = 0;
+                game_over_flag = 0;
                 game_start = 0;
             }
         }
@@ -242,22 +264,16 @@ void main()
     }
 }
 
-int is_die_check(int current_character, int current_block, int timer)
+int is_die_check(int current_character, int current_block)
 {
-    if (timer == 0)
+
+    if (current_block == current_character)
     {
-        return 1; // 1
+        return 0;
     }
     else
     {
-        if (current_block == current_character)
-        {
-            return 0;
-        }
-        else
-        {
-            return 1; // 1
-        }
+        return 1; // 1
     }
 }
 
@@ -277,12 +293,13 @@ void game_start_fn()
 
 void game_init_fn()
 {
+    die_by_bullet = 0;
     current_bullet_w = 63;
     first_block = 399;
     current_w_index = 399;
     current_h_index = 588;
     step = 0;
-    gmae_over_flag = 0;
+    game_over_flag = 0;
     ms_counter = 0;
     timer = 25;
     phase = 1;
@@ -295,12 +312,20 @@ void game_init_fn()
     int x = 1024;
     int y = 768;
 
+    monster_array_value = 651;
+
     for (int i = 0; i < y; i++)
     {
         for (int j = 0; j < x; j++)
         {
             drawPixelARGB32(j, i, 0x000000);
         }
+    }
+
+    for (int i = 0; i < 11; i++)
+    {
+        monster_position_array[i] = monster_array_value;
+        monster_array_value -= 57;
     }
 }
 
@@ -405,7 +430,7 @@ void pause_mode()
                     shiftY = -700;
                     step = 0;
                     current_h_index = 708 - 120;
-                    gmae_over_flag = 0;
+                    game_over_flag = 0;
                     current_w_index = block_array[0];
                 }
                 else if (my_strncmp(destination_stage, "2", 1) == 1)
@@ -416,7 +441,7 @@ void pause_mode()
                     shiftY = -700;
                     current_h_index = 708 - 120;
                     step = 0;
-                    gmae_over_flag = 0;
+                    game_over_flag = 0;
                     current_w_index = block_array[0];
                 }
                 else if (my_strncmp(destination_stage, "3", 1) == 1)
@@ -426,7 +451,7 @@ void pause_mode()
                     is_load_flag = 0;
                     shiftY = -700;
                     current_h_index = 708 - 120;
-                    gmae_over_flag = 0;
+                    game_over_flag = 0;
                     step = 0;
                     current_w_index = block_array[0];
                 }
@@ -442,6 +467,12 @@ void pause_mode()
                 uart_puts("data bit  = 8 \n");
                 uart_puts("handshaking  = off \n");
             }
+            else if (my_strncmp(currentCommand, "j", 1))
+            {
+                uart_puts("\n");
+                uart_sendi(current_h_index);
+                uart_puts("\n");
+            }
             else
             {
                 uart_puts("\"");
@@ -453,6 +484,43 @@ void pause_mode()
                 uart_puts("\" is not supported command \n");
             }
             charIndex = 0;
+        }
+    }
+}
+
+int is_shot_fatal_check()
+{
+    int die_flag;
+    for (int i = 0; i < 11; i++)
+    {
+        if (monster_index[i] == 1)
+        {
+            die_flag = is_character_die_by_bullet(current_bullet_w, monster_position_array[i], current_w_index, current_h_index);
+            if (die_flag == 1)
+            {
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+int is_character_die_by_bullet(int bullet_w, int bullet_h, int character_w, int character_h)
+{
+    if (bullet_h - 63 != character_h)
+    {
+        return 0;
+    }
+    else
+    {
+        if (bullet_w + 30 > character_w && bullet_w + 50 < character_w + 70)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
         }
     }
 }
