@@ -199,18 +199,45 @@ void main()
             {
                 game_over_flag = 1;
             }
-
             if (game_over_flag == 0)
             {
-                if (ms_counter % 5 == 0)
+                if (stage == 1)
                 {
-                    create_bullet(monster_position_array, current_bullet_w, stage, monster_index);
-                    current_bullet_w += 20;
-                    if (current_bullet_w == 963)
+                    if (ms_counter % 10 == 0)
                     {
-                        current_bullet_w = 63;
+                        create_bullet(monster_position_array, current_bullet_w, stage, monster_index);
+                        current_bullet_w += 20;
+                        if (current_bullet_w == 963)
+                        {
+                            current_bullet_w = 63;
+                        }
                     }
                 }
+                else if (stage == 2)
+                {
+                    if (ms_counter % 5 == 0)
+                    {
+                        create_bullet(monster_position_array, current_bullet_w, stage, monster_index);
+                        current_bullet_w += 20;
+                        if (current_bullet_w == 963)
+                        {
+                            current_bullet_w = 63;
+                        }
+                    }
+                }
+                else if (stage == 3)
+                {
+                    if (ms_counter % 2 == 0)
+                    {
+                        create_bullet(monster_position_array, current_bullet_w, stage, monster_index);
+                        current_bullet_w += 20;
+                        if (current_bullet_w == 963)
+                        {
+                            current_bullet_w = 63;
+                        }
+                    }
+                }
+
                 if (ms_counter == 100)
                 {
                     ms_counter = 0;
