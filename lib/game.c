@@ -4,18 +4,17 @@
 #include "../uart/uart1.h"
 #include "./game.h"
 
-const int screen_width = 1024;
-const int screen_height = 768;
+#define screen_width 1024
+#define screen_height 768
 
 struct screenData screen[1024][768];
 struct screenData screen_for_transition[1024][768];
 
-const int background_og_height = 948;
-const int background_og_width = 177;
-const float background_scaleX = 1024.0 / background_og_width;
-const int background_scaled_width = screen_width;
-const int background_scaled_height = background_og_height * background_scaleX;
-
+#define background_og_height 948
+#define background_og_width 177
+#define background_scaleX (1024.0 / background_og_width)
+#define background_scaled_width screen_width
+#define background_scaled_height (background_og_height * background_scaleX)
 // void walking_character()
 // {
 

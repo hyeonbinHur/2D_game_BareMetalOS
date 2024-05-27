@@ -366,18 +366,18 @@ void start_new_stage(int stage)
 {
     if (stage == 1)
     {
-        timer = 25;
+        timer = 30;
         phase = 1;
     }
     else if (stage == 2)
     {
-        timer = 20;
+        timer = 25;
         phase = 1;
     }
     else if (stage == 3)
     {
-        timer = 150; // 15
-        phase = 7;   // 1
+        timer = 20; // 15
+        phase = 1;  // 1
     }
 }
 
