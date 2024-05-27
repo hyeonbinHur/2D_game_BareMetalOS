@@ -166,6 +166,7 @@ void all_clear()
     }
 
     drawString(420, 300, "Complete", 0x00AA0000, 3);
+    // load_monster_for_complete_screen(600);
 }
 
 void startGame()
@@ -453,12 +454,28 @@ void create_monster(int *monster_position_array, unsigned int *monster_index, in
         }
     }
 }
+void load_monster_for_complete_screen(unsigned int start_h)
+{
+    int monster_w = 53;
+    int monster_h = 53;
+    for (int w = 10; w < 870 + monster_w; w++)
+    {
+        for (int h = start_h; h < start_h + monster_h; h++)
+        {
+            unsigned int attr;
+            attr = epd_bitmap_stage1_monster[(h - start_h) * monster_w + (w - 10)];
+            if (attr != 0x00000000)
+            {
+                drawPixelARGB32(w, h, attr);
+            }
+        }
+    }
+}
 
 void load_monster(unsigned int start_h, int stage)
 {
     int monster_w = 53;
     int monster_h = 53;
-    uart_sendi(start_h);
     if (stage == 1)
     {
         for (int w = 10; w < 10 + monster_w; w++)

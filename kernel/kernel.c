@@ -50,8 +50,7 @@ void main()
     uart_init();
     // Initialize frame buffer
     framebf_init();
-    all_clear_fn();
-
+    // all_clear_fn();
     unsigned char c;
 
     while (1)
@@ -387,17 +386,28 @@ void all_clear_fn()
         c = getUart();
         set_wait_timer(0, 0);
         ms_counter++;
-        if (ms_counter == 100)
+
+        if (ms_counter == 50)
         {
             if (start_w == 100)
             {
-                re_load_black(870, start_h, 70, 120);
+                re_load_black(870, start_h, 70, 130);
             }
-            re_load_black(start_w, start_h, 70, 120);
-            start_w += 70;
+            re_load_black(start_w, start_h, 70, 130);
+            start_w += 35;
+            start_h -= 60;
             load_character(start_w, start_h, 1);
+        }
+
+        else if (ms_counter == 100)
+        {
+            re_load_black(start_w, start_h, 70, 120);
+            start_w += 35;
+            start_h += 60;
+            show_jump(start_w, start_h, 1);
             ms_counter = 0;
         }
+
         if (start_w == 870)
         {
             start_w = 100;
