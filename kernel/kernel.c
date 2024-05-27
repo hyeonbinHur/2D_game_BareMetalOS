@@ -32,6 +32,8 @@ int monster_array_value;
 unsigned int monster_position_array[12];
 int die_by_bullet;
 
+int immutal = 0;
+
 void all_clear_fn();
 
 void game_start_fn();
@@ -63,6 +65,10 @@ void main()
                 show_stage_clear(stage);
                 stage_start_flag = 1;
                 start_new_stage(stage);
+            }
+            if (immutal == 1)
+            {
+                game_over_flag = 0;
             }
 
             if (step == 0 && is_load_flag == 0 && game_over_flag == 0)
@@ -260,8 +266,9 @@ void main()
                 }
             }
 
-            if (game_over_flag == 1) // game over
+            if (game_over_flag == 1 && immutal == 0) // game over
             {
+
                 show_die_character_fn(current_w_index, current_h_index, direction, is_jump);
                 if (die_by_bullet == 1)
                 {
@@ -379,7 +386,11 @@ void all_clear_fn()
     all_clear();
     int start_w = 100;
     int start_h = 600;
+    int bullet_w = 100;
     unsigned char c;
+    load_monster_for_complete_screen(700);
+    drawString(300, 400, "Press r to restart the game", 0x0000BB00, 2);
+
     while (1)
     {
         set_wait_timer(1, 10);
@@ -387,6 +398,11 @@ void all_clear_fn()
         set_wait_timer(0, 0);
         ms_counter++;
 
+        if (c == 'r')
+        {
+            game_init_fn();
+            break;
+        }
         if (ms_counter == 50)
         {
             if (start_w == 100)
@@ -406,6 +422,18 @@ void all_clear_fn()
             start_h += 60;
             show_jump(start_w, start_h, 1);
             ms_counter = 0;
+        }
+
+        if (ms_counter % 4 == 0)
+        {
+            re_load_black(bullet_w, 700, 50, 50);
+            bullet_w += 10;
+            load_bullet(bullet_w, 700, 1);
+            if (bullet_w > 900)
+            {
+                re_load_black(bullet_w, 700, 50, 50);
+                bullet_w = 100;
+            }
         }
 
         if (start_w == 870)

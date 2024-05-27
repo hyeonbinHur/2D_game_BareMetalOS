@@ -458,7 +458,7 @@ void load_monster_for_complete_screen(unsigned int start_h)
 {
     int monster_w = 53;
     int monster_h = 53;
-    for (int w = 10; w < 870 + monster_w; w++)
+    for (int w = 10; w < 10 + monster_w; w++)
     {
         for (int h = start_h; h < start_h + monster_h; h++)
         {
