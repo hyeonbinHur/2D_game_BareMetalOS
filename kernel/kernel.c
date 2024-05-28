@@ -43,7 +43,7 @@ void game_init_fn();
 int is_die_check(int current_character, int current_block);
 
 void start_new_stage(int stage);
-
+void welcome_screen();
 void pause_mode();
 
 void main()
@@ -138,8 +138,6 @@ void main()
                     current_h_index -= 40;
                     direction = 0;
                     is_jump = 1;
-                    // re load at here
-                    uart_puts("character moves to \"left\" side \n");
                 }
 
                 else if (c == 'd')
@@ -150,12 +148,9 @@ void main()
                     current_h_index -= 40;
                     direction = 1;
                     is_jump = 1;
-                    // re load at here
-                    uart_puts("character moves to \"right\" side \n");
                 }
                 else if (c == ' ')
                 {
-                    uart_puts("\" space \" pressed \n");
                     pause_mode();
                     re_load_background(450, 300, 200, 50);
                 }
@@ -197,6 +192,11 @@ void main()
                     {
                         game_over_flag = is_die_check(current_w_index, block_array[step]);
                     }
+                }
+
+                if (game_over_flag == 1)
+                {
+                    uart_puts("\nfalling off from the block..\n");
                 }
             }
             die_by_bullet = is_shot_fatal_check();
@@ -248,6 +248,7 @@ void main()
                     ms_counter = 0;
                     if (timer == 1)
                     {
+                        uart_puts("\nTime out!!\n");
                         game_over_flag = 1;
                     }
                     timer -= 1;
@@ -259,6 +260,18 @@ void main()
                     shiftY = -700;
                     stage++;
                     stage_start_flag = 0;
+                    if (stage == 1)
+                    {
+                        uart_puts("\nStage 1 : Jungle start!\n");
+                    }
+                    else if (stage == 2)
+                    {
+                        uart_puts("\nStage 2 : Antarctica start!\n");
+                    }
+                    else if (stage == 3)
+                    {
+                        uart_puts("\nStage 3 : Volcano start!\n");
+                    }
                     if (stage == 4)
                     {
                         all_clear_fn();
@@ -268,7 +281,6 @@ void main()
 
             if (game_over_flag == 1 && immutal == 0) // game over
             {
-
                 show_die_character_fn(current_w_index, current_h_index, direction, is_jump);
                 if (die_by_bullet == 1)
                 {
@@ -313,6 +325,12 @@ int is_die_check(int current_character, int current_block)
 void game_start_fn()
 {
     startGame();
+    welcome_screen();
+    uart_puts("\nPress \"Enter\" to start the game !");
+    uart_puts("\nPress \"a\" to move left top block");
+    uart_puts("\nPress \"d\" to move right top block");
+
+    uart_puts("\nLet's move to top\n");
 
     while (1)
     {
@@ -383,6 +401,8 @@ void start_new_stage(int stage)
 
 void all_clear_fn()
 {
+
+    uart_puts("\nYOU CLEAR THE GAME!\n");
     all_clear();
     int start_w = 100;
     int start_h = 600;
@@ -412,15 +432,15 @@ void all_clear_fn()
             re_load_black(start_w, start_h, 70, 130);
             start_w += 35;
             start_h -= 60;
-            load_character(start_w, start_h, 1);
+            show_jump(start_w, start_h, 1);
         }
 
         else if (ms_counter == 100)
         {
-            re_load_black(start_w, start_h, 70, 120);
+            re_load_black(start_w, start_h, 70, 130);
             start_w += 35;
             start_h += 60;
-            show_jump(start_w, start_h, 1);
+            load_character(start_w, start_h, 1);
             ms_counter = 0;
         }
 
@@ -445,6 +465,7 @@ void all_clear_fn()
 
 void pause_mode()
 {
+    uart_puts("\nEntered to Pause mode\n");
     drawString(450, 300, "PAUSE", 0x00AA0000, 4);
     static char currentCommand[100];
     int charIndex = 0;
@@ -453,10 +474,9 @@ void pause_mode()
         char c = uart_getc();
         if (c == ' ')
         {
-            uart_sendc('\n');
+            uart_puts("\nEscape Pause mode\n");
             break;
         }
-
         else if (c != ' ' && c != '\n')
         {
             if (c == 127)
@@ -519,6 +539,8 @@ void pause_mode()
                     current_h_index = 708 - 120;
                     game_over_flag = 0;
                     current_w_index = block_array[0];
+
+                    uart_puts("\n Successfully jumped to stage 1 \n");
                 }
                 else if (my_strncmp(destination_stage, "2", 1) == 1)
                 {
@@ -530,6 +552,7 @@ void pause_mode()
                     step = 0;
                     game_over_flag = 0;
                     current_w_index = block_array[0];
+                    uart_puts("\n Successfully jumped to stage 2 \n");
                 }
                 else if (my_strncmp(destination_stage, "3", 1) == 1)
                 {
@@ -541,6 +564,7 @@ void pause_mode()
                     game_over_flag = 0;
                     step = 0;
                     current_w_index = block_array[0];
+                    uart_puts("\n Successfully jumped to stage 3 \n");
                 }
                 else
                 {
@@ -585,6 +609,7 @@ int is_shot_fatal_check()
             die_flag = is_character_die_by_bullet(current_bullet_w, monster_position_array[i], current_w_index, current_h_index);
             if (die_flag == 1)
             {
+                uart_puts("Monster kills you!\n");
                 return 1;
             }
         }
@@ -610,4 +635,30 @@ int is_character_die_by_bullet(int bullet_w, int bullet_h, int character_w, int 
             return 0;
         }
     }
+}
+
+void welcome_screen()
+{
+
+    uart_puts("\n\n\n\n\n");
+    uart_puts(
+        "   _____                         ___  \n"
+        "  / ____|                       |__ \\   \n"
+        " | |  __ _ __ ___  _   _ _ __      ) | \n"
+        " | | |_ | '__/ _ \\| | | | '_ \\    / /   \n"
+        " | |__| | | | (_) | |_| | |_) |  / /_  \n"
+        "  \\_____|_|  \\___/ \\__,_| .__/  |____|  \n"
+        "                      | |             \n"
+        " _____       __ _     |_| _           \n"
+        "|_   _|    / _(_)     (_) |          \n"
+        "  | |  __ | |_ _ _ __  _| |_ _ _   _ \n"
+        "  | | |_ \\|  _| | '_ \\| | __  | | | |  \n"
+        " _| |_| | | | | | | | | | | |_| |_| |  \n"
+        "|_____|_| |_|_| |_|_| |_|_|\\__|\\__, |  \n"
+        "    | |      (_)                __/ |  \n"
+        " ___| |_ __ _ _ _ __ ___ __ _ _|___/__ \n"
+        "/ __| __/ _` | | '__/ __/ _` / __|/ _ \\\n"
+        "\\__ \\ || (_| | | | | (_| (_| \\__ \\  __/\n"
+        "|___/\\__\\__,_|_|_|  \\___\\__,_|___/\\___|\n");
+    uart_puts("\n\n\n");
 }

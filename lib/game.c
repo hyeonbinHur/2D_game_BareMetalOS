@@ -15,6 +15,7 @@ struct screenData screen_for_transition[1024][768];
 #define background_scaleX (1024.0 / background_og_width)
 #define background_scaled_width screen_width
 #define background_scaled_height (background_og_height * background_scaleX)
+
 // void walking_character()
 // {
 
@@ -268,17 +269,9 @@ void loadBlock(int start_x, int start_y, int stage)
 
 void load_character(int start_w, int start_h, int direction)
 {
-    // uart_sendi(start_h);
     int character_w = 70;
     int character_h = 120;
-    // if (direction == 1)
-    // {
-    //     re_load_background(start_w - 38, start_h + 17, character_w, 130);
-    // }
-    // else if (direction == 0)
-    // {
-    //     re_load_background(start_w + 38, start_h + 17, character_w, 130);
-    // }
+
     for (int h = start_h; h < start_h + character_h; h++)
     {
         for (int w = start_w; w < start_w + character_w; w++)
@@ -426,7 +419,6 @@ unsigned int *create_monster_array(int *monster_position_array, unsigned int cur
             moster_index_arr[monster_index] = 1;
         }
     }
-    // uart_puts("complete load monster arr \n");
 
     create_monster(monster_position_array, moster_index_arr, stage);
 
@@ -435,17 +427,9 @@ unsigned int *create_monster_array(int *monster_position_array, unsigned int cur
 
 void create_monster(int *monster_position_array, unsigned int *monster_index, int stage)
 {
-    // int monster_array_value = 651;
-    // unsigned int monster_position_array[12];
-    // for (int i = 0; i < 11; i++)
-    // {
-    //     monster_position_array[i] = monster_array_value;
-    //     monster_array_value -= 57;
-    // }
 
     for (int i = 0; i < 11; i++)
     {
-        // uart_puts("complete create monster \n");
 
         if (monster_index[i] == 1)
         {
@@ -650,17 +634,17 @@ void show_stage_clear(int stage)
     {
 
         drawString(360, 200, "Stage 1 Jungle", 0x00FF00, 3);
-        drawString(290, 400, "Press \"Enter\" to start the game", 0x0000BB00, 2);
+        drawString(290, 400, "Press \"Enter\" to start the stage", 0x0000BB00, 2);
     }
     else if (stage == 2)
     {
         drawString(320, 200, "Stage 2 Antarctica", 0x0000FF, 3);
-        drawString(280, 400, "Press \"Enter\" to start the game", 0x0000FF, 2);
+        drawString(280, 400, "Press \"Enter\" to start the stage", 0x0000FF, 2);
     }
     else if (stage == 3)
     {
         drawString(290, 200, "Fianl Stage Volcano", 0xFF0000, 3);
-        drawString(250, 400, "Press \"Enter\" to restart the game", 0xFF0000, 2);
+        drawString(250, 400, "Press \"Enter\" to start the stage", 0xFF0000, 2);
     }
     unsigned char c;
 
@@ -699,21 +683,21 @@ void load_background_with_transition(unsigned int *block_array, int stage, int s
 
 void store_background_for_transition(int shiftY, int stage)
 {
-    int originalHeight = 948;                   // 상단 절반의 원래 높이
-    int originalWidth = 177;                    // 원본 가로 크기
-    float scaleX = 1024.0 / originalWidth;      // 가로 스케일 비율
-    int scaledWidth = 1024;                     // 스케일된 가로 크기, 화면을 꽉 채움
-    int scaledHeight = originalHeight * scaleX; // 스케일된 세로 크기
+    int originalHeight = 948;
+    int originalWidth = 177;
+    float scaleX = 1024.0 / originalWidth;
+    int scaledWidth = 1024;
+    int scaledHeight = originalHeight * scaleX;
 
-    // int yOffset = (768 - scaledHeight) / 2; // 세로 중앙 정렬을 위한 Y 오프셋
-    // int shiftY = -350;                      // 아래로 이동시킬 픽셀 수
+    // int yOffset = (768 - scaledHeight) / 2;
+    // int shiftY = -350;
     for (int y = 0; y < 768; y++)
     {
         for (int x = 0; x < 1024; x++)
         {
             int srcY = y / scaleX - shiftY;
-            int srcX = x / scaleX;                     // 원본 이미지에서의 X 인덱스
-            int index = (srcY * originalWidth + srcX); // 원본 이미지의 RGB888 데이터 인덱스
+            int srcX = x / scaleX;
+            int index = (srcY * originalWidth + srcX);
 
             unsigned int attr;
             if (stage == 1)
@@ -796,5 +780,3 @@ void store_character_for_transition(int start_w, int start_h, int direction)
         }
     }
 }
-
-// void shoot_Ball(unsigned int *array)
